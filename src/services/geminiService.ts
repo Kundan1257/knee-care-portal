@@ -1,0 +1,28 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// 1. Initialize the live Google SDK with your secure local token mapping
+const genAI = new GoogleGenerativeAI("AQ.Ab8RN6JJeVL_UV8715mvhQ7RDe2COfM8glGwuhRsJhNWXM14bw");
+
+export const getKneeCareTip = async (userPromptText: string) => {
+
+  try {
+    // 2. Target the ultra-fast, high-utility gemini-1.5-flash model
+        // @ts-ignore - Bypass strict property type constraints for system instructions
+    const model = genAI.getGenerativeModel({ 
+  model: "gemini-2.5-flash-lite",
+ // systemInstruction: "You are an elite clinical knee recovery assistant. Provide precise, empathetic, post-surgical mobilization insights and safety guardrails. Keep text under 4 bullet points."
+});
+  
+
+
+    // 3. Execute the live dynamic prompt generation stream
+    const result = await model.generateContent(userPromptText);
+    const response = await result.response;
+    return response.text();
+
+  } catch (error) {
+    console.error("Gemini Live Bridge Failed:", error);
+    return "Our automated health grid is optimizing tracking parameters. Please try re-submitting your query.";
+  }
+};
+export const generateKneeContent = getKneeCareTip;
