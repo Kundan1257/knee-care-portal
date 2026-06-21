@@ -512,8 +512,7 @@ export const PersonalizedPlanSection = () => {
     `;
 
     try {
-      const result = await generateKneeContent(`${systemPrompt} \n User Query: ${userPrompt}`);
-
+      const result = await generateKneeContent(systemPrompt, userPrompt);
       setPlan(result);
     } catch (e) {
       console.error(e);
@@ -943,7 +942,7 @@ function AppContent() {
               <Route path="/exercises" element={<ExerciseSection />} />
               <Route path="/diet" element={<DietSection />} />
               <Route path="/help" element={<HelpSection />} />
-              {/* <Route path="/premium" element={<PremiumSection />} /> */}
+             
               <Route path="/checkout" element={<CheckoutSection />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/privacy" element={<PrivacyPolicyPage />} />
