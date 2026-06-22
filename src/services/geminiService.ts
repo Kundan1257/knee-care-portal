@@ -9,7 +9,7 @@ export const getKneeCareTip = async (userPromptText: string) => {
     // 2. Target the ultra-fast, high-utility gemini-1.5-flash model
         // @ts-ignore - Bypass strict property type constraints for system instructions
     const model = genAI.getGenerativeModel({ 
-  model: "gemini-1,5-flash",
+  model: "gemini-2.5-flash-lite",
  // systemInstruction: "You are an elite clinical knee recovery assistant. Provide precise, empathetic, post-surgical mobilization insights and safety guardrails. Keep text under 4 bullet points."
 });
   
