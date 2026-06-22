@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // 1. Initialize the live Google SDK with your secure local token mapping
-const genAI = new GoogleGenerativeAI("AQ.Ab8RN6JJeVL_UV8715mvhQ7RDe2COfM8glGwuhRsJhNWXM14bw");
+const genAI = new GoogleGenerativeAI("AQ.Ab8RN6K4OiYsFuns9Sj4X_nzzA55np3nqc_tc6Ynun1Zjssmhg");
 
 export const getKneeCareTip = async (userPromptText: string) => {
 
@@ -9,7 +9,7 @@ export const getKneeCareTip = async (userPromptText: string) => {
     // 2. Target the ultra-fast, high-utility gemini-1.5-flash model
         // @ts-ignore - Bypass strict property type constraints for system instructions
     const model = genAI.getGenerativeModel({ 
-  model: "gemini-2.5-flash-lite",
+  model: "gemini-1,5-flash",
  // systemInstruction: "You are an elite clinical knee recovery assistant. Provide precise, empathetic, post-surgical mobilization insights and safety guardrails. Keep text under 4 bullet points."
 });
   
