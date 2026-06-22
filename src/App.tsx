@@ -184,12 +184,14 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       
       try {
         if (currentToken) {
+          
           await refreshUser();
           // Re-check token after refresh attempt (refreshUser might have cleared it)
           currentToken = localStorage.getItem('token');
         }
         
-        if (!currentToken) {
+        if (!currentToken) { 
+          return;
           const targetUrl = `${API_URL}/api/auth/auto-login`;
           console.log(`LOG: [Auth] Token missing/invalid, attempting anonymous auto-login to: ${targetUrl} ... ⚡`);
           
@@ -208,12 +210,16 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 console.log("LOG: [Auth] Anonymous auto-login successful ✅");
                 login(data.token, data.user || { user_id: data.user_id, isPremium: false });
               }
+                
             } else {
               console.warn(`LOG: [Auth] Auto-login response not OK: ${res.status} for ${targetUrl}`);
             }
           } catch (err) {
             console.error("LOG: [Auth] Auto-login fetch failed:", err);
           }
+           
+      
+    
         } else {
           console.log("LOG: [Auth] Session restored successfully ✅");
         }
