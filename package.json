@@ -6,13 +6,12 @@
   "scripts": {
     "dev": "node --watch --experimental-strip-types server.ts",
     "build": "vite build",
-
     "start": "vite preview",
-
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit"
   },
-    "dependencies": {
+  "dependencies": {
+    "@google/genai": "^2.9.0",
     "@google/generative-ai": "^0.1.0",
     "@tailwindcss/vite": "^4.3.0",
     "@types/react-router-dom": "^5.3.3",
