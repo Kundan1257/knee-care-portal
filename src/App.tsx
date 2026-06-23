@@ -114,13 +114,14 @@ export const API_URL = getApiUrl();
 console.log(`LOG: [Config] Using API_URL: "${API_URL || 'RELATIVE (same origin)'}"`);
 
 // Connectivity self-check
+/*
 if (typeof window !== 'undefined') {
   fetch(`${API_URL}/api/health`)
     .then(r => r.json())
     .then(data => console.log("LOG: [API] Connectivity check successful ✅", data))
     .catch(err => console.warn("LOG: [API] Connectivity check failed (Expected if backend starting) ⚠️", err));
 }
-
+*/
 export const AuthContext = React.createContext<{
   isLoggedIn: boolean;
   token: string | null;

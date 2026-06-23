@@ -1,31 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
-import { MessageCircle, Send, Sparkles } from '../App.js';
-import { cn } from '../lib/utils.js';
-import { Card, PageWrapper } from '../App.js';
+import { motion } from 'framer-motion';
+import { MessageCircle, Send, Sparkles } from 'lucide-react';
 import { getKneeCareTip } from '../services/geminiService.js';
 
+// Dummy layout wrappers to prevent layout crashes
+const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => <div className="min-h-screen bg-gray-50 p-4">{children}</div>;
+const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => <div className={`bg-white rounded-2xl shadow-xl ${className}`}>{children}</div>;
 const ChatBubble: React.FC<{ message: string, isBot: boolean }> = ({ message, isBot }) => (
-  <motion.div 
-    initial={{ opacity: 0, scale: 0.9, x: isBot ? -10 : 10 }}
-    animate={{ opacity: 1, scale: 1, x: 0 }}
-    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-    className={cn(
-      "p-4 rounded-2xl max-w-[85%] text-sm font-medium leading-relaxed mb-4 shadow-sm",
-      isBot ? "bg-muted text-primary rounded-tl-none self-start" : "bg-primary text-secondary rounded-tr-none self-end ml-auto"
-    )}
-  >
+  <div className={`p-4 rounded-2xl max-w-[85%] text-sm font-medium mb-4 shadow-sm ${isBot ? "bg-gray-100 text-gray-800 self-start" : "bg-blue-600 text-white self-end ml-auto"}`}>
     {message}
-  </motion.div>
+  </div>
 );
 
-
-  // 💡 Interactive Preventative Quick-Reply Prompt Chips
-  const suggestedPrompts = [
-    "5-min knee warmup for runners",
-    "How to protect knees during deep squats?",
-    "Daily habits to reduce joint cracking sounds"
-  ];
+const suggestions = [
+  "Reduce knee stiffness",
+  "Best recovery exercise",
+  "Foods for joint support",
+  "Relaxation routine"
+];
 
 export const HelpSection: React.FC = () => {
   const [messages, setMessages] = useState<{ text: string, isBot: boolean }[]>([
@@ -34,18 +26,14 @@ export const HelpSection: React.FC = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-
   const inputRef = useRef<HTMLInputElement>(null);
 
- // useEffect(() => {
-  //  if (scrollRef.current) {
-  //    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  //  }
- // }, [messages]);
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
-
     const userMsg = input.trim();
     setInput('');
     setMessages(prev => [...prev, { text: userMsg, isBot: false }]);
@@ -61,87 +49,69 @@ export const HelpSection: React.FC = () => {
     }
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion);
-    if (inputRef.current) {
-      inputRef.current.focus();
+  const handleSuggestionClick = async (suggestion: string) => {
+    if (loading) return;
+    setMessages(prev => [...prev, { text: suggestion, isBot: false }]);
+    setLoading(true);
+
+    try {
+      const response = await getKneeCareTip(suggestion);
+      setMessages(prev => [...prev, { text: response, isBot: true }]);
+    } catch (err) {
+      setMessages(prev => [...prev, { text: "I'm sorry, I couldn't process that. Please try again.", isBot: true }]);
+    } finally {
+      setLoading(false);
     }
   };
-
-  const suggestions = [
-    "Reduce knee stiffness",
-    "Best recovery exercise",
-    "Foods for joint support",
-    "Relaxation routine"
-  ];
 
   return (
     <PageWrapper>
       <header className="mb-12 text-center">
-        <h1 className="text-3xl font-bold text-primary mb-3">AI Support Assistant</h1>
+        <h1 className="text-3xl font-bold text-blue-600 mb-3">AI Support Assistant</h1>
         <p className="text-gray-500 font-medium max-w-lg mx-auto">Get instant guidance on knee care, recovery techniques, and daily habit tips.</p>
       </header>
 
       <Card className="max-w-2xl mx-auto border-none shadow-2xl p-0 h-[650px] flex flex-col overflow-hidden bg-white">
-        <div className="p-6 border-b border-border/10 bg-muted/30 flex items-center justify-between">
+        <div className="p-6 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Knee Assistant Online</span>
           </div>
-          <MessageCircle size={20} className="text-primary/20" />
+          <MessageCircle size={20} className="text-gray-300" />
         </div>
 
-        <div 
-          ref={scrollRef}
-          className="flex-1 overflow-y-auto p-6 scrollbar-hide space-y-4 custom-scrollbar"
-        >
-          {messages.map((msg, i) => (
-            <ChatBubble key={i} message={msg.text} isBot={msg.isBot} />
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          {messages.map((msg, idx) => (
+            <ChatBubble key={idx} message={msg.text} isBot={msg.isBot} />
           ))}
           {loading && (
-            <div className="flex gap-1 p-4 bg-muted w-16 rounded-2xl animate-pulse">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/20" />
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/20" />
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/20" />
+            <div className="flex items-center gap-2 text-sm text-gray-400 font-medium italic animate-pulse">
+              <Sparkles size={16} className="text-blue-500 animate-spin" />
+              Thinking...
             </div>
           )}
+          <div ref={scrollRef} />
         </div>
 
-        <div className="p-6 bg-muted/30 border-t border-border/10">
-          <div className="flex flex-wrap gap-2 mb-4">
-            {suggestions.map((suggestion, i) => (
+        {messages.length === 1 && (
+          <div className="px-6 pb-2 flex flex-wrap gap-2">
+            {suggestions.map((item, idx) => (
               <motion.button
-                key={i}
-                whileHover={{ scale: 1.02, backgroundColor: 'rgba(var(--primary), 0.05)' }}
+                key={idx}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => handleSuggestionClick(suggestion)}
-                className="px-4 py-2 rounded-full border border-primary/10 bg-white text-[11px] font-bold text-primary shadow-sm hover:shadow-md transition-all whitespace-nowrap"
+                onClick={() => handleSuggestionClick(item)}
+                disabled={loading}
+                className="text-xs font-semibold bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full transition-all"
               >
-                {suggestion}
+                ✨ {item}
               </motion.button>
             ))}
           </div>
+        )}
 
-          
-        {/* Quick Prompt Chips row layout container */}
-        <div className="flex flex-wrap gap-2 mb-3 px-2">
-          {suggestedPrompts.map((promptText, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => {
-                // If your file uses input state like 'input' or 'message', we attempt standard updates
-                if (typeof setInput !== 'undefined') setInput(promptText);
-               // else if (typeof setNewMessage !== 'undefined') setNewMessage(promptText);
-               // else if (typeof setMessage !== 'undefined') setMessage(promptText);
-              }}
-              className="text-xs bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-full px-3 py-1.5 transition-all duration-200 active:scale-95 text-left"
-            >
-              ✨ {promptText}
-            </button>
-          ))}
-        </div>
-      <div className="relative flex items-center gap-3">
+        <div className="p-4 bg-gray-50 border-t border-gray-100">
+          <div className="relative flex items-center gap-3">
             <input 
               ref={inputRef}
               type="text"
@@ -149,12 +119,12 @@ export const HelpSection: React.FC = () => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
               placeholder="Ask anything about knee care..."
-              className="flex-1 bg-white border border-border/50 px-5 py-4 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-primary/10 transition-all outline-none pr-14"
+              className="flex-1 bg-white border border-gray-200 px-5 py-4 rounded-2xl text-sm font-medium outline-none pr-14"
             />
             <button 
               onClick={handleSend}
               disabled={loading || !input.trim()}
-              className="absolute right-2 w-10 h-10 bg-primary text-secondary rounded-xl flex items-center justify-center shadow-lg hover:bg-primary/90 transition-all disabled:opacity-50"
+              className="absolute right-2 w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg hover:bg-blue-700 transition-all disabled:opacity-50"
             >
               <Send size={18} />
             </button>
@@ -164,20 +134,19 @@ export const HelpSection: React.FC = () => {
       </Card>
       
       <div className="mt-12 max-w-2xl mx-auto">
-        <Card className="bg-blue-50/50 border-none">
-          <div className="flex gap-4">
-            <div className="w-10 h-10 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center shrink-0">
-              <Sparkles size={20} />
-            </div>
-            <div>
-              <h4 className="font-bold text-blue-900 mb-1 text-sm">Expert Tip</h4>
-              <p className="text-[10px] text-blue-800/60 font-medium leading-relaxed">Ask about "Knee recovery stretches" or "Healthy knee diet" to get started with research-backed guidance.</p>
-            </div>
+        <div className="bg-blue-50 border-none p-4 rounded-xl flex gap-4">
+          <div className="w-10 h-10 bg-blue-100 text-blue-500 rounded-xl flex items-center justify-center shrink-0">
+            <Sparkles size={20} />
           </div>
-        </Card>
+          <div>
+            <h4 className="font-bold text-blue-900 mb-1 text-sm">Expert Tip</h4>
+            <p className="text-[10px] text-blue-800/60 font-medium leading-relaxed">Ask about "Knee recovery stretches" or "Healthy knee diet" to get started with research-backed guidance.</p>
+          </div>
+        </div>
       </div>
     </PageWrapper>
   );
 };
 
 export default HelpSection;
+

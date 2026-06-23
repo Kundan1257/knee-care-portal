@@ -28,25 +28,31 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) =>
         </div>
 
         <div className="flex flex-col gap-3 my-1">
-          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+          {/* 💡 Box 1: Changed bg-gray-50 to Medical Blue styling */}
+          <div className="flex items-start gap-3 p-3 bg-blue-50/50 border border-blue-100/30 shadow-sm rounded-xl">
             <span className="text-xl shrink-0">🛌</span>
             <p className="text-sm text-gray-700 font-medium leading-relaxed">
               <strong>Morning Stiffness:</strong> Feeling hesitation or sharp discomfort during your very first steps out of bed.
             </p>
           </div>
-          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+          
+          {/* 💡 Box 2: Changed bg-gray-50 to Medical Blue styling */}
+          <div className="flex items-start gap-3 p-3 bg-blue-50/50 border border-blue-100/30 shadow-sm rounded-xl">
             <span className="text-xl shrink-0">🪜</span>
             <p className="text-sm text-gray-700 font-medium leading-relaxed">
               <strong>Stairway Hesitation:</strong> Lacking confidence or holding tightly to handrails when walking downstairs.
             </p>
           </div>
-          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+          
+          {/* 💡 Box 3: Changed bg-gray-50 to Medical Blue styling */}
+          <div className="flex items-start gap-3 p-3 bg-blue-50/50 border border-blue-100/30 shadow-sm rounded-xl">
             <span className="text-xl shrink-0">🛋️</span>
             <p className="text-sm text-gray-700 font-medium leading-relaxed">
               <strong>Rising Strain:</strong> Feeling deep joint pressure when pushing yourself up from a deep couch or low chair.
             </p>
           </div>
-        </div>
+</div>
+
 
         <div className="pt-2 border-t border-gray-100">
           <h4 className="font-extrabold text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">

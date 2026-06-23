@@ -30,8 +30,8 @@ const getAI = () => {
   const apiKey = typeof process !== 'undefined' ? process.env.VITE_GEMINI_API_KEY : null;
   if (!apiKey) return null;
   return new GoogleGenAI({ apiKey });
->>>>>>> 8f60833 (Secure Gemini integration with env variables and remove hardcoded secrets)
 };
+
 
 export async function generateKneeContent(systemPrompt: string, userPrompt: string) {
   try {
