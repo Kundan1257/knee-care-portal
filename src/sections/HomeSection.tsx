@@ -5,18 +5,31 @@ interface HomeSectionProps {
 }
 
 export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) => {
-  const handleNavigation = (target: string) => {
-    // 💡 Smoothly glide the view down to the target container element on the page
-    const element = document.getElementById(target);
+    const handleNavigation = (target: string) => {
+    // 1. Try to find the exact container ID on the page (e.g., id="ex" or id="about")
+    let element = document.getElementById(target);
+    
+    // 2. Foolproof Fallback: If the ID isn't found, search for the actual components by their names
+    if (!element) {
+      if (target === 'ex') {
+        // Looks for your Exercise or AI Help section wrapper tags
+        element = document.querySelector('section, [class*="HelpSection"], [class*="help"]');
+      } else if (target === 'about') {
+        // Looks for your informational card panels or footer elements
+        element = document.querySelector('footer, [class*="about"], [class*="About"]');
+      }
+    }
+
+    // 3. Perform a smooth native browser scroll transition down to the section
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else if (setActiveSection) {
-      // Keep your fallback layout handler intact if there are hidden section tab gates
       setActiveSection(target);
     } else {
       window.location.hash = target;
     }
   };
+
 
 
   return (
