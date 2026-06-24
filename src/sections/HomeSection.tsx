@@ -6,12 +6,18 @@ interface HomeSectionProps {
 
 export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) => {
   const handleNavigation = (target: string) => {
-    if (setActiveSection) {
+    // 💡 Smoothly glide the view down to the target container element on the page
+    const element = document.getElementById(target);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (setActiveSection) {
+      // Keep your fallback layout handler intact if there are hidden section tab gates
       setActiveSection(target);
     } else {
       window.location.hash = target;
     }
   };
+
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-8 flex flex-col gap-8 font-sans antialiased text-gray-800">
