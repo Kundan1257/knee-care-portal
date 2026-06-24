@@ -1,66 +1,43 @@
 import { GoogleGenAI } from "@google/genai";
 
-<<<<<<< HEAD
-// 1. Initialize the live Google SDK with your secure local token mapping
-const genAI = new GoogleGenerativeAI("AQ.Ab8RN6K4OiYsFuns9Sj4X_nzzA55np3nqc_tc6Ynun1Zjssmhg");
+// 💡 SECURE: Read the key safely via Vite's metadata context layer!
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
-export const getKneeCareTip = async (userPromptText: string) => {
-
-  try {
-    // 2. Target the ultra-fast, high-utility gemini-1.5-flash model
-        // @ts-ignore - Bypass strict property type constraints for system instructions
-    const model = genAI.getGenerativeModel({ 
-  model: "gemini-2.5-flash-lite",
- // systemInstruction: "You are an elite clinical knee recovery assistant. Provide precise, empathetic, post-surgical mobilization insights and safety guardrails. Keep text under 4 bullet points."
+const ai = new GoogleGenAI({ 
+  apiKey: apiKey ? apiKey.trim() : "" 
 });
-  
+
+if (!apiKey) {
+  console.warn("LOG: [Gemini] Environment variable VITE_GEMINI_API_KEY is missing or undefined.");
+}
 
 
-    // 3. Execute the live dynamic prompt generation stream
-    const result = await model.generateContent(userPromptText);
-    const response = await result.response;
-    return response.text();
+/**
+ * Sends the user's chat input directly to Gemini AI and returns an educational response.
+ * @param userPromptText The message typed or selected by the user.
+ */
+export const getKneeCareTip = async (userPromptText: string): Promise<string> => {
+  if (!userPromptText.trim()) return "Please enter a valid question.";
 
-  } catch (error) {
-    console.error("Gemini Live Bridge Failed:", error);
-    return "Our automated health grid is optimizing tracking parameters. Please try re-submitting your query.";
+  try {
+    // Connect directly using the new canonical 2.5 flash generation method
+    const response = await ai.models.generateContent({ 
+      model: "gemini-2.5-flash",
+      contents: userPromptText,
+      config: {
+        // Enforce health support boundaries directly inside the generation engine configurations
+        systemInstruction: `You are a supportive, educational system assistant for knee care, rehabilitation recovery tracking, and lifestyle habits. 
+        When answering user queries, you MUST strictly adhere to these compliance rules:
+        1. Always provide at least 3 distinct variations, structural tracks, or self-care alternatives (e.g., specific alternative stretching modifications, low-impact paths, or tracking paths).
+        2. Strictly avoid formulating explicit clinical, post-surgical, or tissue diagnoses or labels regarding the user's joint pain.
+        3. Every single text block outputted MUST conclude with an educational disclaimer paragraph confirming this is informational text and not a substitute for professional clinical medical advice.`
+      }
+    });
+
+    // Extract the completed response string from the return model content block
+    return response.text || "No guidance text could be generated. Please try rephrasing your question.";
+  } catch (error: any) {
+    console.error("LOG: [Gemini SDK] Live content generation transaction crash:", error.message);
+    return `I'm having trouble connecting to my AI core right now (${error.message}). Please try submitting your question again in a moment.`;
   }
-=======
-const getAI = () => {
-  const apiKey = typeof process !== 'undefined' ? process.env.VITE_GEMINI_API_KEY : null;
-  if (!apiKey) return null;
-  return new GoogleGenAI({ apiKey });
 };
-
-
-export async function generateKneeContent(systemPrompt: string, userPrompt: string) {
-  try {
-    const ai = getAI();
-    if (!ai) return "I'm here to help with your knee care.";
-    
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `${systemPrompt}\n\nUser Query: ${userPrompt}`,
-    });
-    return response.text || "I'm here to help with your knee care.";
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "I'm having trouble connecting right now.";
-  }
-}
-
-export async function getKneeCareTip(prompt: string) {
-  try {
-    const ai = getAI();
-    if (!ai) return "I'm here to help with your knee care. Try some gentle stretching!";
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `You are a helpful knee-care assistant. Provide a short, practical, and supportive tip for knee health based on the following query: "${prompt}". Keep it simple and avoid medical claims.`,
-    });
-    return response.text || "I'm here to help with your knee care. Try some gentle stretching!";
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "I'm having trouble connecting right now, but remember to stay active and gentle with your knees!";
-  }
-}

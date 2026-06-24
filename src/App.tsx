@@ -86,7 +86,8 @@ export {
 
 import { cn } from './lib/utils.js';
 import { EXERCISES, RELAXATIONS, RECIPES, TEAS } from './constants.js';
-import { getKneeCareTip, generateKneeContent } from './services/geminiService.js';
+import { getKneeCareTip } from './services/geminiService.js';
+
 import HomeSection from './sections/HomeSection.js';
 import ExerciseSection from './sections/ExerciseSection.js';
 import DietSection from './sections/DietSection.js';
@@ -519,7 +520,8 @@ export const PersonalizedPlanSection = () => {
     `;
 
     try {
-      const result = await generateKneeContent(systemPrompt, userPrompt);
+      const result = await getKneeCareTip  (
+        userPrompt);
       setPlan(result);
     } catch (e) {
       console.error(e);
@@ -864,7 +866,7 @@ const PrivacyPolicyPage = () => (
           </p>
         </div>
         <div className="p-8 bg-primary text-secondary rounded-[2.5rem]">
-          <p className="font-black text-center text-sm uppercase tracking-[0.3em]">Integrity Guaranteed
+          <div className="font-black text-center text-sm uppercase tracking-[0.3em]">Integrity Guaranteed
 
         {/* 🔐 GLOBAL REGULATORY COMPLIANCE BADGES */}
         <div className="mt-8 pt-6 border-t border-white/5 flex flex-wrap gap-3 text-[10px] uppercase font-bold tracking-widest text-text/40">
@@ -872,7 +874,7 @@ const PrivacyPolicyPage = () => (
           <span className="px-2.5 py-1 bg-white/5 rounded-md border border-white/5">CCPA Protected</span>
           <span className="px-2.5 py-1 bg-white/5 rounded-md border border-white/5">Zero-Log Architecture</span>
         </div>
-  </p>
+  </div>
         </div>
       </Card>
     </Section>
