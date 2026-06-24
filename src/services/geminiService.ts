@@ -1,5 +1,6 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
+<<<<<<< HEAD
 // 1. Initialize the live Google SDK with your secure local token mapping
 const genAI = new GoogleGenerativeAI("AQ.Ab8RN6K4OiYsFuns9Sj4X_nzzA55np3nqc_tc6Ynun1Zjssmhg");
 
@@ -24,5 +25,42 @@ export const getKneeCareTip = async (userPromptText: string) => {
     console.error("Gemini Live Bridge Failed:", error);
     return "Our automated health grid is optimizing tracking parameters. Please try re-submitting your query.";
   }
+=======
+const getAI = () => {
+  const apiKey = typeof process !== 'undefined' ? process.env.VITE_GEMINI_API_KEY : null;
+  if (!apiKey) return null;
+  return new GoogleGenAI({ apiKey });
+>>>>>>> 8f60833 (Secure Gemini integration with env variables and remove hardcoded secrets)
 };
-export const generateKneeContent = getKneeCareTip;
+
+export async function generateKneeContent(systemPrompt: string, userPrompt: string) {
+  try {
+    const ai = getAI();
+    if (!ai) return "I'm here to help with your knee care.";
+    
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `${systemPrompt}\n\nUser Query: ${userPrompt}`,
+    });
+    return response.text || "I'm here to help with your knee care.";
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    return "I'm having trouble connecting right now.";
+  }
+}
+
+export async function getKneeCareTip(prompt: string) {
+  try {
+    const ai = getAI();
+    if (!ai) return "I'm here to help with your knee care. Try some gentle stretching!";
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: `You are a helpful knee-care assistant. Provide a short, practical, and supportive tip for knee health based on the following query: "${prompt}". Keep it simple and avoid medical claims.`,
+    });
+    return response.text || "I'm here to help with your knee care. Try some gentle stretching!";
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    return "I'm having trouble connecting right now, but remember to stay active and gentle with your knees!";
+  }
+}
