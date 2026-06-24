@@ -947,7 +947,13 @@ function AppContent() {
         <main className="flex-1">
           <AnimatePresence mode="wait">
             <Routes>
-              <Route path="/" element={<HomeSection />} />
+  {/* 💡 FIX: This gives HomeSection the exact instructions to route users when a button is clicked! */}
+  <Route path="/" element={
+    <HomeSection setActiveSection={(target) => {
+      if (target === 'ex') window.location.href = '/help'; 
+      if (target === 'about') window.location.href = '/about'; 
+    }} />
+  } />
               <Route path="/exercises" element={<ExerciseSection />} />
               <Route path="/diet" element={<DietSection />} />
               <Route path="/help" element={<div id="ex"><HelpSection /></div>} />
