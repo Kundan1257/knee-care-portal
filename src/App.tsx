@@ -957,8 +957,7 @@ function AppContent() {
   } />
               <Route path="/exercises" element={<ExerciseSection />} />
               <Route path="/diet" element={<DietSection />} />
-              <Route path="/help" element={<div id="ex">              <TrackerSection />
-              <HelpSection /></div>} />
+              <Route path="/help" element={<div id="ex">                            <HelpSection /></div>} />
              
               <Route path="/checkout" element={<CheckoutSection />} />
               <Route path="/about" element={<AboutPage />} />
