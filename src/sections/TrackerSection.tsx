@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { saveKneeLog } from '../services/logService';
+import { saveKneeLog } from '../services/logService.ts';
 
 export const TrackerSection: React.FC = () => {
   const [painScore, setPainScore] = useState<number>(3);
