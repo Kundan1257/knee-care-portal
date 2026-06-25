@@ -973,29 +973,9 @@ function AppContent() {
 }
 
 export default function App() {
-  const [deferredPrompt, setDeferredPrompt] = React.useState<any>(null);
-  const [showInstallBtn, setShowInstallBtn] = React.useState(false);
+  
 
-  React.useEffect(() => {
-    const handler = (e: any) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-      setShowInstallBtn(true);
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") {
-      setDeferredPrompt(null);
-      setShowInstallBtn(false);
-    }
-  };
-
+  
   return (
     <ErrorBoundary>
       <AuthProvider>
