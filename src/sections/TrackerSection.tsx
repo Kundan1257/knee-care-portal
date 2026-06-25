@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { saveKneeLog } from '../services/logService.js';
+import { saveKneeLog } from '../services/logservice.js';
 
 export const TrackerSection: React.FC = () => {
   const [painScore, setPainScore] = useState<number>(3);
   const [stiffness, setStiffness] = useState<boolean>(false);
-  const [swelling, setSwelling] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [saved, setSaved] = useState<boolean>(false);
 
