@@ -1,3 +1,4 @@
+import { TrackerSection } from "./sections/TrackerSection.js";
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -956,7 +957,7 @@ function AppContent() {
   } />
               <Route path="/exercises" element={<ExerciseSection />} />
               <Route path="/diet" element={<DietSection />} />
-              <Route path="/help" element={<div id="ex"><TrackerSection />
+              <Route path="/help" element={<div id="ex">              <TrackerSection />
               <HelpSection /></div>} />
              
               <Route path="/checkout" element={<CheckoutSection />} />
