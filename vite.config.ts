@@ -15,6 +15,12 @@ export default defineConfig(({mode}) => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    // 🎯 THE SAFETY PACKAGING FILTER: Cleanly strips node database drivers out of mobile bundles!
+    build: {
+      rollupOptions: {
+        external: ['mongoose', 'src/lib/db.ts']
+      }
+    },
     server: {
    //   proxy: {
    //     '/api': {
