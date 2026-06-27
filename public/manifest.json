@@ -3,7 +3,7 @@
   "short_name": "Knee-Care",
   "description": "Biomechanical guidance and stability routines for long-term joint health.",
   "id": "/",
-  "start_url": "/?source=pwa",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
