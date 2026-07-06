@@ -1,5 +1,10 @@
 {
+  "cleanUrls": true,
   "rewrites": [
+    {
+      "source": "/google1400faf087d2ff4c.html",
+      "destination": "/google1400faf087d2ff4c.html"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
