@@ -1,34 +1,49 @@
-const CACHE_NAME = 'knee-care-cache-v1';
+const CACHE_NAME = 'knee-care-v1';
 const ASSETS = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  '/manifest.json'
 ];
 
+// 🎯 Step A: Initialize and Pre-Cache critical assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS);
     })
   );
-  self.skipWaiting();
+  self.skipWaiting(); // Forces the fresh service worker to take over instantly
 });
 
+// 🎯 Step B: Activate and prune old historical data blocks
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
-});
-
-self.addEventListener('fetch', (event) => {
-  // 🎯 SAFETY VALVE: Skip caching for live API calls so your Gemini AI chat never breaks or lags!
-  if (event.request.url.includes('googleapis.com') || event.request.url.includes('vercel.app/api')) {
-    return event.respondWith(fetch(event.request));
-  }
-  
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
     })
   );
+  self.clients.claim(); // Take immediate control of all open browser tabs
+});
+
+// 🎯 Step C: The mandatory Fetch Interceptor that satisfies Android Chrome
+self.addEventListener('fetch', (event) => {
+  // Only intercept standard web page asset requests
+  if (event.request.mode === 'navigate' || event.request.url.startsWith(self.location.origin)) {
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        return fetch(event.request).catch(() => {
+          return caches.match('/index.html');
+        });
+      })
+    );
+  }
 });
