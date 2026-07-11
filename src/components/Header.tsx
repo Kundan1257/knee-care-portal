@@ -8,8 +8,7 @@ export default function Header() {
       {/* 📥 USER-FRIENDLY PWA INSTALLATION GUIDANCE POPUP MODAL */}
       {showGuide ? (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          className="bg-[#1E3A34] text-white p-6 rounded-2xl max-w-sm w-full border border-emerald-500 shadow-2xl relative transition-all transform scale-100 opacity-100"
-
+          <div className="bg-[#1E3A34] text-white p-6 rounded-2xl max-w-sm w-full border border-emerald-500 shadow-2xl relative transition-all transform scale-100 opacity-100">
             
             {/* Animated Arrow Pointing up toward Chrome's Top-Right Menu Row */}
             <div className="absolute -top-3 right-4 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[12px] border-b-emerald-500 animate-bounce" />
@@ -44,7 +43,7 @@ export default function Header() {
         </div>
       ) : null}
 
-      {/* 🌐 YOUR EXISTING MAIN APPLICATION NAVIGATION LAYOUT ROW */}
+      {/* 🌐 MAIN APPLICATION NAVIGATION LAYOUT ROW */}
       <header className="bg-[#1E3A34] text-white p-4 border-b border-emerald-800 sticky top-0 z-40 shadow-md">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
