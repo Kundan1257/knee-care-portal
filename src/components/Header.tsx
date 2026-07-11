@@ -8,7 +8,8 @@ export default function Header() {
       {/* 📥 USER-FRIENDLY PWA INSTALLATION GUIDANCE POPUP MODAL */}
       {showGuide ? (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1E3A34] text-white p-6 rounded-2xl max-w-sm w-full border border-emerald-500 shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+          className="bg-[#1E3A34] text-white p-6 rounded-2xl max-w-sm w-full border border-emerald-500 shadow-2xl relative transition-all transform scale-100 opacity-100"
+
             
             {/* Animated Arrow Pointing up toward Chrome's Top-Right Menu Row */}
             <div className="absolute -top-3 right-4 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[12px] border-b-emerald-500 animate-bounce" />
