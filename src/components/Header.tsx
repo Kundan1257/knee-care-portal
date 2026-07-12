@@ -8,7 +8,7 @@ export default function Header() {
       {/* 📥 USER-FRIENDLY PWA INSTALLATION GUIDANCE POPUP MODAL */}
       {showGuide ? (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#1E3A34] text-white p-6 rounded-2xl max-w-sm w-full border border-emerald-500 shadow-2xl relative transition-all transform scale-100 opacity-100">
+          <div className="bg-slate-900 text-white p-6 rounded-2xl max-w-sm w-full border border-slate-700 shadow-2xl relative block z-50">
             
             {/* Animated Arrow Pointing up toward Chrome's Top-Right Menu Row */}
             <div className="absolute -top-3 right-4 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[12px] border-b-emerald-500 animate-bounce" />
@@ -18,11 +18,11 @@ export default function Header() {
               <h3 className="text-lg font-bold tracking-wide">Install Knee-Care App</h3>
             </div>
             
-            <p className="text-sm text-emerald-100/90 leading-relaxed mb-5">
+            <p className="text-sm text-slate-300 leading-relaxed mb-5">
               Access your clinical Gemini AI routines instantly right from your phone's desktop app vault grid!
             </p>
             
-            <div className="space-y-3 bg-black/20 p-4 rounded-xl border border-emerald-600/30 text-sm mb-6">
+            <div className="space-y-3 bg-black/20 p-4 rounded-xl border border-slate-700 text-sm mb-6">
               <div className="flex gap-3 items-center">
                 <span className="bg-emerald-500 text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
                 <span>Tap the <strong className="text-emerald-400">Three Dots Menu (⋮)</strong> in the absolute top right corner of Chrome.</span>
@@ -44,7 +44,7 @@ export default function Header() {
       ) : null}
 
       {/* 🌐 MAIN APPLICATION NAVIGATION LAYOUT ROW */}
-      <header className="bg-[#1E3A34] text-white p-4 border-b border-emerald-800 sticky top-0 z-40 shadow-md">
+      <header className="bg-slate-900 text-white p-4 border-b border-slate-800 sticky top-0 z-40 shadow-md">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🦾</span>
@@ -55,7 +55,7 @@ export default function Header() {
             {/* Trigger Guide Manual Activation Button */}
             <button 
               onClick={() => setShowGuide(true)}
-              className="text-emerald-300 hover:text-emerald-100 transition-colors text-sm font-medium flex items-center gap-1"
+              className="text-emerald-400 hover:text-emerald-300 transition-colors text-sm font-medium flex items-center gap-1"
               title="View Installation Instructions"
             >
               📥 Install
