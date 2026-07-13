@@ -2,16 +2,19 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { fileURLToPath } from 'url';
 import path from 'path';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   
+  // 🚀 THE ESM BYPASS: Standardizes path mappings without crashing Node server contexts
+  const currentDirName = path.dirname(fileURLToPath(import.meta.url));
+  
   return {
     plugins: [
       react(), 
       tailwindcss(),
-      // 🚀 THE AUTOMATED COMPILATION LOCK: Forcefully packages your PWA assets securely
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'inline',
@@ -46,16 +49,15 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(currentDirName, '.'),
       },
     },
-        build: {
-      copyPublicDir: true, // 🚀 FORCE LOCK: Forces Vite to copy your manifests and sw.js into production!
+    build: {
+      copyPublicDir: true, // 🚀 FORCE LOCK: Copies your manifest parameters directly into production
       rollupOptions: {
         external: ['mongoose', 'src/lib/db.ts']
       }
     },
-
     server: {
       hmr: process.env.DISABLE_HMR === 'true' ? false : {
         overlay: false,
