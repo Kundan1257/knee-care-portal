@@ -49,11 +49,13 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, '.'),
       },
     },
-    build: {
+        build: {
+      copyPublicDir: true, // 🚀 FORCE LOCK: Forces Vite to copy your manifests and sw.js into production!
       rollupOptions: {
         external: ['mongoose', 'src/lib/db.ts']
       }
     },
+
     server: {
       hmr: process.env.DISABLE_HMR === 'true' ? false : {
         overlay: false,
