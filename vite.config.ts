@@ -52,22 +52,24 @@ export default defineConfig(({ mode }) => {
               purpose: 'maskable'
             }
           ], // 🚀 NO NO CONFLICTS: Icons list array block ends cleanly with a closed bracket and a comma!
+                    // 🚀 THE RICHER UI FIX: Uses valid camelCase keywords to satisfy the build compiler perfectly!
           screenshots: [
             {
               src: 'icon-512.png',
               sizes: '512x512',
               type: 'image/png',
-              form_factor: 'wide',
+              formFactor: 'wide',
               label: 'Knee-Care Desktop Application Portal'
             },
             {
               src: 'icon-512.png',
               sizes: '512x512',
               type: 'image/png',
-              form_factor: 'narrow',
+              formFactor: 'narrow',
               label: 'Knee-Care Mobile Application Portal'
             }
           ]
+
         }
 
       })
