@@ -32,7 +32,7 @@ export default function Header() {
           backdropFilter: 'blur(4px)',
           zIndex: 9999,
           display: 'flex',
-          itemsAlign: 'center',
+          alignItems: 'center', // 🚀 ALIGNED CORRECTLY: Restores layout rendering constraints flawlessly
           justifyContent: 'center',
           padding: '16px'
         }}>
@@ -101,7 +101,7 @@ export default function Header() {
         zIndex: 40,
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
       }}>
-        <div style={{ maxWidth: '1152px', margin: '0 auto', display: 'flex', justifyContent: 'between', alignItems: 'center' }}>
+        <div style={{ maxWidth: '1152px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '24px' }}>🦾</span>
             <span style={{ fontWeight: 'bold', fontSize: '18px' }}>Knee-Care</span>
@@ -115,7 +115,7 @@ export default function Header() {
                 color: '#ffffff',
                 padding: '8px 16px',
                 borderRadius: '8px',
-                fontWeight: 'semibold',
+                fontWeight: '600',
                 border: '1px solid #34d399',
                 cursor: 'pointer',
                 fontSize: '14px'
