@@ -2,8 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-site-verification" content="Y0JEH96XNoNx4UEjc9mO6esDCJv3nN7UD_Xu_DmNAVo" />
     <title>Knee-Care | Daily Knee Health & Prevention</title>
@@ -11,25 +9,12 @@
     <link rel="apple-touch-icon" href="/icon-192.png" />
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="/manifest.json">
-
-    <meta name="theme-color" content="#1E3A34">
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1E3A34" />
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(registration => {
-            console.log('SW registered: ', registration);
-          }).catch(registrationError => {
-            console.log('SW registration failed: ', registrationError);
-          });
-        });
-      }
-    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-
