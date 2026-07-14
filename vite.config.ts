@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
         injectRegister: 'inline',
-        manifest: {
+                manifest: {
           name: 'Knee-Care: Ultimate Joint Support',
           short_name: 'Knee-Care',
           description: 'Biomechanical guidance and stability routines for long-term joint health.',
@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
           background_color: '#ffffff',
           display: 'standalone',
           orientation: 'portrait',
-                    icons: [
+          icons: [
             {
               src: 'icon-192.png',
               sizes: '192x192',
@@ -51,9 +51,25 @@ export default defineConfig(({ mode }) => {
               type: 'image/png',
               purpose: 'maskable'
             }
+          ], // 🚀 NO NO CONFLICTS: Icons list array block ends cleanly with a closed bracket and a comma!
+          screenshots: [
+            {
+              src: 'icon-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              form_factor: 'wide',
+              label: 'Knee-Care Desktop Application Portal'
+            },
+            {
+              src: 'icon-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              form_factor: 'narrow',
+              label: 'Knee-Care Mobile Application Portal'
+            }
           ]
-
         }
+
       })
     ],
     define: {
