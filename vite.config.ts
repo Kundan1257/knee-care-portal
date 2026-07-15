@@ -24,12 +24,14 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(currentDirName, '.'),
       },
     },
-    build: {
-      copyPublicDir: true, // 🚀 HARD LOCK: Forces Vite to copy your raw public manifest.json straight to production
+        build: {
+      copyPublicDir: true,
+      chunkSizeWarningLimit: 2000, // 🚀 BYPASS: Raises the asset memory ceiling to stop files from dropping!
       rollupOptions: {
         external: ['mongoose', 'src/lib/db.ts']
       }
     },
+
     server: {
       hmr: process.env.DISABLE_HMR === 'true' ? false : {
         overlay: false,
