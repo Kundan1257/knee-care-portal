@@ -13,15 +13,18 @@
     <meta name="theme-color" content="#1E3A34" />
     <script src="https://razorpay.com"></script>
     
-    <!-- 🧲 THE EARLY INTERCEPTOR: Catches the browser token before React even loads -->
+    <!-- 🚀 THE EARLY LOGIC INTERCEPTOR: Safe, error-free global event capture -->
     <script>
-      window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        window.stashedInstallPrompt = e;
-        if (window.updateCustomInstallButton) {
-          window.updateCustomInstallButton();
-        }
-      });
+      (function() {
+        window.stashedInstallPrompt = null;
+        window.addEventListener('beforeinstallprompt', function(e) {
+          e.preventDefault();
+          window.stashedInstallPrompt = e;
+          if (typeof window.updateCustomInstallButton === 'function') {
+            window.updateCustomInstallButton();
+          }
+        });
+      })();
     </script>
   </head>
   <body>
