@@ -11,7 +11,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#1E3A34" />
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://razorpay.com"></script>
+    
+    <!-- 🧲 THE EARLY INTERCEPTOR: Catches the browser token before React even loads -->
+    <script>
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        window.stashedInstallPrompt = e;
+        if (window.updateCustomInstallButton) {
+          window.updateCustomInstallButton();
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
