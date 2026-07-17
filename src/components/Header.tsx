@@ -23,14 +23,13 @@ export default function Header() {
         (window as any).stashedInstallPrompt = null;
       });
     } else {
-      // 🚀 HARDCODED BYPASS OVERRIDE: If Chrome intercepts the hardware prompt, show the manual guide instantly!
       setShowGuide(true);
     }
   };
 
   return (
     <div style={{ position: 'relative', width: '100%', zIndex: 99 }}>
-      {/* 📥 USER-FRIENDLY POPUP OVERLAY GUIDE (Fires if native prompt is hijacked) */}
+      {/* 📥 COMPILER-SAFE POPUP MODAL DIRECTIONS */}
       {showGuide ? (
         <div style={{
           position: 'fixed',
@@ -54,16 +53,13 @@ export default function Header() {
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
             position: 'relative'
           }}>
-            
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
               <span style={{ fontSize: '24px' }}>📥</span>
               <h3 style={{ fontSize: '18px', fontWeight: 'bold', margin: 0 }}>Install Knee-Care App</h3>
             </div>
-            
             <p style={{ fontSize: '14px', color: '#d1fae5', lineHeight: '1.6', marginBottom: '20px', margin: 0 }}>
               Access your clinical Gemini AI joint routines instantly from your phone's home screen or laptop desktop!
             </p>
-            
             <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '14px', marginBottom: '24px' }}>
               <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '12px' }}>
                 <span style={{ backgroundColor: '#10b981', color: '#ffffff', fontWeight: 'bold', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>1</span>
@@ -74,7 +70,6 @@ export default function Header() {
                 <span>Select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong> to pin it flawlessly.</span>
               </div>
             </div>
-            
             <button 
               onClick={() => setShowGuide(false)}
               style={{
@@ -95,7 +90,7 @@ export default function Header() {
         </div>
       ) : null}
 
-      {/* 🌐 MAIN HEADER NAVIGATION LAYOUT */}
+      {/* 🌐 MAIN HEADER NAVIGATION LAYOUT GRID CONTAINER */}
       <header style={{
         backgroundColor: '#ffffff',
         color: '#1E3A34',
@@ -105,33 +100,49 @@ export default function Header() {
         top: 0,
         zIndex: 40
       }}>
-        <div style={{ maxWidth: '1152px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* 🚀 THE FIXED WRAPPING CORE: flexWrap: 'wrap' breaks the horizontal width boundary block cleanly! */}
+        <div style={{ 
+          maxWidth: '1152px', 
+          margin: '0 auto', 
+          display: 'flex', 
+          flexWrap: 'wrap', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          gap: '12px' 
+        }}>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '24px' }}>🦾</span>
             <span style={{ fontWeight: 'bold', fontSize: '18px', color: '#1E3A34' }}>Knee-Care</span>
           </div>
           
-          <nav style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#64748b', cursor: 'pointer' }}>HOME</span>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#64748b', cursor: 'pointer' }}>EX</span>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#64748b', cursor: 'pointer' }}>DIET</span>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#64748b', cursor: 'pointer' }}>HELP</span>
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#64748b', cursor: 'pointer' }}>ABOUT</span>
+          {/* 🚀 FIXED WRAPPING INTERFACE ROW */}
+          <nav style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            alignItems: 'center', 
+            gap: '16px',
+            marginLeft: 'auto' 
+          }}>
+            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>HOME</span>
+            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>EX</span>
+            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>DIET</span>
+            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>HELP</span>
+            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>ABOUT</span>
             
-            {/* 🚀 THE INDEPENDENT UNCONDITIONAL INSTALL BUTTON: Forced structural rendering visibility */}
             <button 
               onClick={handleCustomInstallClick}
               style={{
                 backgroundColor: '#059669',
                 color: '#ffffff',
-                padding: '8px 16px',
+                padding: '6px 12px',
                 borderRadius: '8px',
                 fontWeight: 'bold',
                 border: 'none',
                 cursor: 'pointer',
-                fontSize: '14px',
-                boxShadow: '0 4px 6px -1px rgba(5, 150, 105, 0.2)'
+                fontSize: '12px',
+                boxShadow: '0 4px 6px -1px rgba(5, 150, 105, 0.2)',
+                whiteSpace: 'nowrap'
               }}
             >
               📥 Install App
