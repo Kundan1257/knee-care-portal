@@ -313,25 +313,13 @@ const Navbar = () => {
   const { isLoggedIn, logout } = React.useContext(AuthContext);
   const [showGuide, setShowGuide] = useState(false);
 
-  // 🧲 LIFE-CYCLE BRIDGE: Polls global memory every 500ms to catch the early window stashed token
-  const [isInstallable, setIsInstallable] = useState(false);
   useEffect(() => {
-    const checkPromptInterval = setInterval(() => {
-      if ((window as any).stashedInstallPrompt) {
-        setIsInstallable(true);
-        clearInterval(checkPromptInterval);
-      }
-    }, 500);
-
-    const handleMountFallback = () => {
-      setIsInstallable(true);
+    const savePrompt = (e: Event) => {
+      e.preventDefault();
+      (window as any).stashedInstallPrompt = e;
     };
-    (window as any).updateCustomInstallButton = handleMountFallback;
-
-    return () => {
-      clearInterval(checkPromptInterval);
-      (window as any).updateCustomInstallButton = null;
-    };
+    window.addEventListener('beforeinstallprompt', savePrompt);
+    return () => window.removeEventListener('beforeinstallprompt', savePrompt);
   }, []);
 
   const handleCustomInstallClick = () => {
@@ -340,11 +328,12 @@ const Navbar = () => {
       promptEvent.prompt();
       promptEvent.userChoice.then((choiceResult: { outcome: string }) => {
         if (choiceResult.outcome === 'accepted') {
-          setIsInstallable(false);
+          console.log('User successfully installed Knee-Care via custom UI button');
         }
         (window as any).stashedInstallPrompt = null;
       });
     } else {
+      // 🚀 USER-FIRST FALLBACK: If the browser locks the token, pop up instructions instantly!
       setShowGuide(true);
     }
   };
@@ -428,29 +417,27 @@ const Navbar = () => {
                 <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-nowrap ${location.pathname === '/help' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/help">Help</Link>
                 <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-nowrap ${location.pathname === '/about' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/about">About</Link>
                 
-                {/* 🚀 THE MASTER INTEGRATION LOCK: Displays cleanly next to ABOUT if installable */}
-                {isInstallable && (
-                  <button 
-                    onClick={handleCustomInstallClick}
-                    style={{
-                      backgroundColor: '#1E3A34',
-                      color: '#ffffff',
-                      padding: '8px 16px',
-                      borderRadius: '12px',
-                      fontWeight: 'bold',
-                      border: '1px solid #10b981',
-                      cursor: 'pointer',
-                      fontSize: '10px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.2em',
-                      marginLeft: '8px',
-                      display: 'inline-flex',
-                      alignItems: 'center'
-                    }}
-                  >
-                    📥 Install App
-                  </button>
-                )}
+                {/* 🚀 FIXED UNCONDITIONAL VISIBILITY ROW: This button is physically forced to render! */}
+                <button 
+                  onClick={handleCustomInstallClick}
+                  style={{
+                    backgroundColor: '#1E3A34',
+                    color: '#ffffff',
+                    padding: '8px 16px',
+                    borderRadius: '12px',
+                    fontWeight: 'bold',
+                    border: '1px solid #10b981',
+                    cursor: 'pointer',
+                    fontSize: '10px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.2em',
+                    marginLeft: '8px',
+                    display: 'inline-flex',
+                    alignItems: 'center'
+                  }}
+                >
+                  📥 Install App
+                </button>
               </nav>
             </div>
           </div>
@@ -459,6 +446,7 @@ const Navbar = () => {
     </>
   );
 };
+
 
 
 const BackButton = () => {
