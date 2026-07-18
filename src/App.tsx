@@ -84,16 +84,15 @@ export {
   Heart
 };
 
-import { cn } from './lib/utils.js';
-import { EXERCISES, RELAXATIONS, RECIPES, TEAS } from './constants.js';
-import { getKneeCareTip } from './services/geminiService.js';
+import { cn } from './lib/utils';
+import { EXERCISES, RELAXATIONS, RECIPES, TEAS } from './constants';
+import { getKneeCareTip } from './services/geminiService';
+import HomeSection from './sections/HomeSection';
+import ExerciseSection from './sections/ExerciseSection';
+import DietSection from './sections/DietSection';
+import HelpSection from './sections/HelpSection';
+import CheckoutSection from './sections/CheckoutSection';
 
-import HomeSection from './sections/HomeSection.js';
-import ExerciseSection from './sections/ExerciseSection.js';
-import DietSection from './sections/DietSection.js';
-import HelpSection from './sections/HelpSection.js';
-//import PremiumSection from './sections/PremiumSection.js';
-import { CheckoutSection } from './sections/CheckoutSection.js';
 
 // --- Context ---
 
