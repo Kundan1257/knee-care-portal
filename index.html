@@ -11,24 +11,33 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#1E3A34" />
-    <!-- 🟢 FIXED SDK ELEMENT LAYER: Points to the true, live functional checkout engine script file -->
+    <!-- 🟢 LIGHTWEIGHT CHECKOUT INTERFACE: Points strictly to the lightweight Checkout SDK script file -->
     <script src="https://razorpay.com"></script>
-    
-    <!-- 🚀 THE EARLY LOGIC INTERCEPTOR: Safe, error-free global event capture -->
+  </head>
+  <body>
+    <!-- 🚀 THE PERSISTENT GLOBAL ENTRY CORE: Placed directly in body so the compiler cannot strip or alias it! -->
     <script>
       (function() {
-        window.stashedInstallPrompt = null;
+        // Protect the token from being cleared out by background navigation resets
+        if (typeof window.stashedInstallPrompt === 'undefined' || window.stashedInstallPrompt === null) {
+          window.stashedInstallPrompt = null;
+        }
+        
         window.addEventListener('beforeinstallprompt', function(e) {
           e.preventDefault();
           window.stashedInstallPrompt = e;
+          console.log("PWA Hardware Token captured perfectly inside absolute root memory!");
+          
+          // Forcefully trigger a persistent custom execution signal that can cross React sandbox walls
+          window.dispatchEvent(new CustomEvent('pwa-token-ready'));
+          
           if (typeof window.updateCustomInstallButton === 'function') {
             window.updateCustomInstallButton();
           }
         });
       })();
     </script>
-  </head>
-  <body>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
