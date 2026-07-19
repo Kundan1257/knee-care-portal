@@ -15,10 +15,9 @@
     <script src="https://razorpay.com"></script>
   </head>
   <body>
-    <!-- 🚀 THE PERSISTENT GLOBAL ENTRY CORE: Placed directly in body so the compiler cannot strip or alias it! -->
+    <!-- 🚀 THE PERSISTENT GLOBAL ENTRY CORE: Placed cleanly right inside the body element workspace -->
     <script>
       (function() {
-        // Protect the token from being cleared out by background navigation resets
         if (typeof window.stashedInstallPrompt === 'undefined' || window.stashedInstallPrompt === null) {
           window.stashedInstallPrompt = null;
         }
@@ -28,7 +27,6 @@
           window.stashedInstallPrompt = e;
           console.log("PWA Hardware Token captured perfectly inside absolute root memory!");
           
-          // Forcefully trigger a persistent custom execution signal that can cross React sandbox walls
           window.dispatchEvent(new CustomEvent('pwa-token-ready'));
           
           if (typeof window.updateCustomInstallButton === 'function') {
