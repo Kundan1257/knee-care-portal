@@ -1,5 +1,10 @@
 {
+  "cleanUrls": true,
   "rewrites": [
+    {
+      "source": "/(manifest.json|sw.js|icon-192.png|icon-512.png|google1400faf087d2ff4c.html)",
+      "destination": "/$1"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"

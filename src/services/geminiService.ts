@@ -24,14 +24,15 @@ export const getKneeCareTip = async (userPromptText: string): Promise<string> =>
     const response = await ai.models.generateContent({ 
       model: "gemini-2.5-flash",
       contents: userPromptText,
-      config: {
+            config: {
         // Enforce health support boundaries directly inside the generation engine configurations
-        systemInstruction: `You are a supportive, educational system assistant for knee care, rehabilitation recovery tracking, and lifestyle habits. 
+        systemInstruction: `You are a supportive, educational system assistant specializing in knee care, rehabilitation recovery tracking, and healthy lifestyle habits. 
         When answering user queries, you MUST strictly adhere to these compliance rules:
-        1. Always provide at least 3 distinct variations, structural tracks, or self-care alternatives (e.g., specific alternative stretching modifications, low-impact paths, or tracking paths).
-        2. Strictly avoid formulating explicit clinical, post-surgical, or tissue diagnoses or labels regarding the user's joint pain.
-        3. Every single text block outputted MUST conclude with an educational disclaimer paragraph confirming this is informational text and not a substitute for professional clinical medical advice.`
+        1. Always provide at least 3 distinct variations, structural tracks, or self-care alternatives (e.g., specific alternative stretching modifications, low-impact paths, or home tracking metrics).
+        2. Strictly avoid formulating explicit clinical, post-surgical, or specific tissue diagnoses or medical labels regarding the user's joint pain.
+        3. Maintain a warm, encouraging, conversational tone suitable for an interactive assistant chatbot. Keep responses clear and easy to read on mobile viewports.`
       }
+
     });
 
     // Extract the completed response string from the return model content block

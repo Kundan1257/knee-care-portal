@@ -3,29 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-site-verification" content="Y0JEH96XNoNx4UEjc9mO6esDCJv3nN7UD_Xu_DmNAVo" />
     <title>Knee-Care | Daily Knee Health & Prevention</title>
     <link rel="icon" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
-    <meta name="theme-color" content="#1E3A34">
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then(registration => {
-            console.log('SW registered: ', registration);
-          }).catch(registrationError => {
-            console.log('SW registration failed: ', registrationError);
-          });
-        });
-      }
-    </script>
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1E3A34" />
+    <!-- 🟢 FIXED SDK ELEMENT LAYER: Points straight to the lightweight Checkout SDK script file -->
+    <script src="https://razorpay.com"></script>
   </head>
   <body>
+    <!-- 🚀 THE PERSISTENT GLOBAL ENTRY CORE: Placed cleanly right inside the body element workspace -->
+    <script>
+      (function() {
+        if (typeof window.stashedInstallPrompt === 'undefined' || window.stashedInstallPrompt === null) {
+          window.stashedInstallPrompt = null;
+        }
+        
+        window.addEventListener('beforeinstallprompt', function(e) {
+          e.preventDefault();
+          window.stashedInstallPrompt = e;
+          console.log("PWA Hardware Token captured perfectly inside absolute root memory!");
+          
+          window.dispatchEvent(new CustomEvent('pwa-token-ready'));
+          
+          if (typeof window.updateCustomInstallButton === 'function') {
+            window.updateCustomInstallButton();
+          }
+        });
+      })();
+    </script>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

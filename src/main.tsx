@@ -1,23 +1,20 @@
-import {StrictMode} from 'react';
-import {createRoot} from 'react-dom/client';
-import App from './App.tsx';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+
 import './index.css';
 
-// Register service worker for PWA support
-if ('serviceWorker' in navigator) {
+// 🚀 UNIFIED PWA PRODUCTION TRACK: Standardizes paths and unblocks Google AI Studio wrappers
+if ('serviceWorker' in navigator && typeof window !== 'undefined') {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch((error) => {
-        console.error('Service Worker registration failed:', error);
-      });
+    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      .then((reg) => console.log('Service Worker registered at absolute scope:', reg.scope))
+      .catch((err) => console.error('Service Worker connection blocked:', err));
   });
 }
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 );
