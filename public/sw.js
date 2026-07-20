@@ -1,11 +1,10 @@
-const CACHE_NAME = 'knee-care-v3';
+const CACHE_NAME = 'knee-care-v4'; // 🟢 Incremented version layer to flush out older cache locks instantly
 const ASSETS = [
   '/',
   '/index.html',
   '/manifest.json'
 ];
 
-// Initialize and pre-cache root files
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -15,7 +14,6 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Clear historical asset blocks safely
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -31,11 +29,23 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Mandatory fetch listener to satisfy Google Chrome security parameters
+// 🟢 NEW NETWORK-FIRST HOOK: Pulls fresh live network assets instantly, falls back to offline cache gracefully
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
+    fetch(event.request)
+      .then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseClone = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return networkResponse;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
 });
