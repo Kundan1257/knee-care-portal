@@ -92,7 +92,8 @@ import HomeSection from './sections/HomeSection';
 import ExerciseSection from './sections/ExerciseSection';
 import DietSection from './sections/DietSection';
 import HelpSection from './sections/HelpSection';
-import CheckoutSection from './sections/CheckoutSection';
+import { CheckoutSection } from './sections/CheckoutSection';
+
 
 
 // --- Context ---
