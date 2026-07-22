@@ -1,24 +1,35 @@
 import React, { useState } from 'react';
 import { CreditCard, ShieldCheck, CheckCircle2, Globe, ChevronDown } from 'lucide-react';
+import * as Sentry from '@sentry/react'; // 🟢 Injected Sentry Tracker Hook Anchor
 
 export const CheckoutSection: React.FC = () => {
   const [region, setRegion] = useState<'SA' | 'US' | 'EU' | 'UK'>('SA');
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  const handlePaymentSubmit = () => {
+  // 🟢 Converted to async function to manage tracking network timeline cleanly
+  const handlePaymentSubmit = async () => {
     try {
       setIsProcessing(true);
       console.log(`Redirecting securely to Razorpay Hosted Checkout for region: ${region}`);
 
+      // 🟢 Capture anonymous conversion metric securely before browser leaves the page
+      Sentry.captureMessage(`User Checkout Initiated`, {
+        level: 'info',
+        tags: {
+          action: 'payment_click',
+          selected_region: region
+        }
+      });
+
+      // 🟢 Hold execution for a micro-fraction of a second (150ms) to clear the network buffer cleanly
+      await new Promise((resolve) => setTimeout(resolve, 150));
+
       if (region === 'SA') {
-        
         window.location.href = "https://rzp.io/rzp/Js4vsuA3";
       } else if (region === 'US' || region === 'UK') {
-        
         window.location.href = "https://rzp.io/rzp/hB9oKg0y";
       } else if (region === 'EU') {
-        
         window.location.href = "https://rzp.io/rzp/mfRJ5uvB";
       } else {
         window.location.href = "https://rzp.io/rzp/hB9oKg0y";
