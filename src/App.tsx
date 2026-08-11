@@ -1,4 +1,5 @@
 import { TrackerSection } from "./sections/TrackerSection.js";
+import { Analytics } from '@vercel/analytics/react';
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -1073,6 +1074,7 @@ export default function App() {
     <ErrorBoundary>
       <AuthProvider>
         <AppContent />
+        <Analytics />
       </AuthProvider>
     </ErrorBoundary>
   );
