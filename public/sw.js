@@ -68,7 +68,7 @@ self.addEventListener('push', (event) => {
     body: pushData.body,
     icon: '/icon-192.png', // Maps cleanly to your PWA manifest brand assets
     badge: '/icon-192.png',
-    vibrate:,
+    vibrate: [200, 100, 200], // Optional haptic feedback pattern for supported devices
     data: { dateOfArrival: Date.now() }
   };
 

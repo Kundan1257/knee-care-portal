@@ -34,7 +34,7 @@ export const TrackerSection: React.FC = () => {
     <div className="max-w-md mx-auto my-6 p-6 bg-white border border-blue-100 shadow-xl rounded-2xl text-gray-800">
       <div className="flex items-center gap-2 mb-6">
         <span className="text-2xl">📊</span>
-        <h2 className="text-xl font-black text-gray-900 tracking-tight">Knee Vital Tracker</h2>
+        <h2 className="text-xl font-black text-gray-900 tracking-tight">Knee Privacy Tracker</h2>
       </div>
 
       <div className="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100">

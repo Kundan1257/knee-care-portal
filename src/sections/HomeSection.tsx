@@ -73,14 +73,15 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) =>
 </div>
 
 
-        <div className="pt-2 border-t border-gray-100">
+                <div className="pt-2 border-t border-gray-100">
           <h4 className="font-extrabold text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
-            🌿 How Knee-Lace Restores Your Freedom
+            🌿 How This Independent Portal Restores Your Freedom
           </h4>
           <p className="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
-            Knee-Lace is your daily companion. It wraps joints in immediate structural security, cushioning cartilage and absorbing impacts before strain reaches sensitive tissues. It gives you the physical confidence to move freely.
+            Knee-Care Portal operates as your daily privacy-first tracking assistant. By logging your bracing habits, physical therapy exercises, and fatigue metrics consistently, you build an independent personal history to analyze joint stability loops with absolute data transparency.
           </p>
         </div>
+
       </div>
 
       {/* 2. STABILITY BREAKTHROUGH CARD */}
@@ -92,11 +93,13 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) =>
           Natural Stability <span className="inline-block animate-pulse">🦵</span>
         </h2>
         <p className="mt-5 text-sm md:text-base font-bold text-yellow-400 bg-white/5 border border-yellow-500/30 px-5 py-4 rounded-xl w-full leading-relaxed">
-          💡 DIRECTIVE: Please put on Knee-Lace before running, exercise, and heavy weight lifting to safeguard joints.
+          💡 PRIVACY TRACKING PROTOCOL: Use this independent checklist interface to log your daily stabilization braces, joint alignment exercises, and recovery parameters with 100% data anonymity.
+
         </p>
-        <p className="mt-5 text-sm md:text-base leading-relaxed text-gray-200 font-medium">
-          Knee-Lace acts as a natural support system for your knees, helping reduce strain and improve stability during daily activities.
+                <p className="mt-5 text-sm md:text-base leading-relaxed text-gray-200 font-medium">
+          Knee-Care Portal functions as a secure, local-first utility to map structural habit consistency over time without bloated third-party tracking scripts.
         </p>
+
                    {/* --- COPIED THE OPEN, CLICKABLE BUTTONS ZONE --- */}
         <div className="mt-8 w-full flex flex-col gap-3 relative z-50 pointer-events-auto block clear-both">
           
