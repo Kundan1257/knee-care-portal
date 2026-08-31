@@ -413,11 +413,11 @@ const Navbar = () => {
 
             <div className="flex items-center gap-2 md:gap-4 overflow-x-auto pb-2 md:pb-0 scrollbar-hide w-full lg:w-auto justify-start lg:justify-end">
               <nav className="flex items-center gap-1 md:gap-2">
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-nowrap ${location.pathname === '/' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/">Home</Link>
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-nowrap ${location.pathname === '/exercises' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/exercises">Ex</Link>
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-nowrap ${location.pathname === '/diet' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/diet">Diet</Link>
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-nowrap ${location.pathname === '/help' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/help">Help</Link>
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-nowrap ${location.pathname === '/about' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/about">About</Link>
+                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/">Home</Link>
+                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/exercises' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/exercises">Ex</Link>
+                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/diet' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/diet">Diet</Link>
+                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/help' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/help">Help</Link>
+                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/about' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/about">About</Link>
                 
                 {/* 🚀 FIXED UNCONDITIONAL VISIBILITY ROW: This button is physically forced to render! */}
                 <button 
@@ -481,8 +481,8 @@ const BackButton = () => {
 export const PageWrapper: React.FC<{ children: React.ReactNode }> = React.memo(({ children }) => (
   <div className="relative min-h-screen overflow-hidden bg-muted/50">
     {/* Subtle Wellness Background Elements */}
-    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/4" />
-    <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none translate-y-1/4 -translate-x-1/4" />
+    <div className="absolute top-0 right-0 w-full h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/4" />
+    <div className="absolute bottom-0 left-0 w-full h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none translate-y-1/4 -translate-x-1/4" />
     
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -506,7 +506,7 @@ export const Section: React.FC<{ title: string; children: React.ReactNode; subti
     className="mb-40 last:mb-0"
   >
     <div className="mb-16">
-      <h2 className="text-4xl md:text-5xl font-black text-primary mb-4 tracking-tighter">{title}</h2>
+      <h2 className="text-2xl md:text-4xl break-words whitespace-normal md:text-5xl font-black text-primary mb-4 tracking-tighter">{title}</h2>
       {subtitle && <p className="text-gray-400 font-medium text-xl max-w-2xl leading-relaxed">{subtitle}</p>}
       <div className="w-16 h-1.5 bg-accent/30 rounded-full mt-8" />
     </div>
@@ -663,7 +663,7 @@ export const PersonalizedPlanSection = () => {
               <Sparkles size={32} />
             </div>
             <div>
-              <h3 className="text-3xl md:text-4xl font-black text-primary tracking-tighter mb-2">Your Recovery Engine</h3>
+              <h3 className="text-xl md:text-3xl break-words whitespace-normal md:text-4xl font-black text-primary tracking-tighter mb-2">Your Recovery Engine</h3>
               <p className="text-xl text-gray-400 font-medium tracking-tight">Tailored biomechanical guidance for your lifestyle.</p>
             </div>
           </div>
@@ -751,7 +751,7 @@ export const PersonalizedPlanSection = () => {
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-4">
                     <div>
-                      <h4 className="text-3xl md:text-4xl font-black text-primary tracking-tighter mb-2">Tailored Recovery Roadmap</h4>
+                      <h4 className="text-xl md:text-3xl break-words whitespace-normal md:text-4xl font-black text-primary tracking-tighter mb-2">Tailored Recovery Roadmap</h4>
                       <p className="text-gray-400 font-medium tracking-widest text-[10px] uppercase bg-muted/50 inline-block px-3 py-1 rounded-full">PLAN FOR {formData.ageGroup} PROFILE</p>
                     </div>
                     <button 
@@ -990,7 +990,7 @@ const ContactPage = () => (
         </p>
         <div className="bg-muted p-12 rounded-[3.5rem] border border-border/50 text-center group hover:bg-white hover:shadow-2xl transition-all duration-500">
           <p className="text-primary/40 font-black text-xs uppercase tracking-[0.4em] mb-4">Official Channel</p>
-          <a href="mailto:kneecare.help@gmail.com" className="text-3xl md:text-4xl font-black text-primary hover:text-accent transition-colors block break-all">
+          <a href="mailto:kneecare.help@gmail.com" className="text-xl md:text-3xl break-words whitespace-normal md:text-4xl font-black text-primary hover:text-accent transition-colors block break-all">
             kneecare.help@gmail.com
           </a>
         </div>
