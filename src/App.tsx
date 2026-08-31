@@ -93,7 +93,7 @@ import HomeSection from './sections/HomeSection';
 import ExerciseSection from './sections/ExerciseSection';
 import DietSection from './sections/DietSection';
 import HelpSection from './sections/HelpSection';
-import { CheckoutSection } from './sections/CheckoutSection';
+import PaymentPage from './sections/paymentService';
 
 
 
@@ -1053,7 +1053,7 @@ function AppContent() {
               <Route path="/diet" element={<DietSection />} />
               <Route path="/help" element={<div id="ex">                            <HelpSection /></div>} />
              
-              <Route path="/checkout" element={<CheckoutSection />} />
+              <Route path="/checkout" element={<PaymentPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/privacy" element={<PrivacyPolicyPage />} />
               <Route path="/contact" element={<ContactPage />} />
