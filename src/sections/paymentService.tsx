@@ -52,13 +52,14 @@ export default function PaymentPage() {
       console.log(`Forwarding localized contract to payment engine: ${billing.currencyCode}`);
       alert("Securely initializing your pre-configured Razorpay checkout pipeline...");
 
-      // 🌐 MAP YOUR THREE LIVE ACTIVE RAZORPAY PAGE LINK IDS HERE EXPLICITLY:
+            // 🌐 MAP YOUR THREE LIVE ACTIVE RAZORPAY PAGE LINK IDS HERE EXPLICITLY:
       const pageLinkRegistry: Record<string, string> = {
-        INR: "https://razorpay.com", // https://rzp.io/rzp/Js4vsuA3
-        USD: "https://razorpay.com", // https://rzp.io/rzp/hB9oKg0y
-        EUR: "https://razorpay.com", // https://rzp.io/rzp/mfRJ5uvB
-        GBP: "https://razorpay.com"  // Falls back to USD page or your specific UK page link cleanly
+        INR: "https://rzp.io/rzp/Js4vsuA3", // 🟢 Active India / APAC pricing node page
+        USD: "https://rzp.io/rzp/hB9oKg0y", // 🟢 Active Global Dollar pricing node page
+        EUR: "https://rzp.io/rzp/mfRJ5uvB", // 🟢 Active European Euro pricing node page
+        GBP: "https://rzp.io/rzp/hB9oKg0y"  // Safely falls back onto the active Dollar pricing page
       };
+
 
       // Extract the absolute target link based on currency selection, or default safely back to USD target configuration
       const activeBaseUrl = pageLinkRegistry[billing.currencyCode || "USD"] || pageLinkRegistry.USD;
