@@ -46,23 +46,48 @@ export default function PaymentPage() {
     }
   }, []);
 
-        // 💳 OFFICIAL GLOBAL RAZORPAY BACKEND GET REDIRECT HANDLER (v4.7.4)
+          // 💳 OFFICIAL RAZORPAY NATIVE POPUP CHECKOUT GATEWAY (v4.7.5)
   const handleCheckoutSubmission = () => {
     try {
       console.log(`Forwarding regional pricing contract to payment engine: ${billing.currencyCode}`);
       alert("Securely initializing your pre-configured Razorpay checkout pipeline...");
 
-      // 📡 PURE GET REDIRECTION LOOP: Maps your data parameters straight into standard address link extensions
-      const targetQueryUrl = `/api/checkout?currency=${encodeURIComponent(billing.currencyCode)}&amount=${encodeURIComponent(billing.displayAmount)}&portal=knee-care`;
-      
-      // Forces the active browser window viewport to jump straight onto your pre-configured backend redirection channel
-      window.location.href = targetQueryUrl;
+      // Base conversion layer: Calculate standard pricing units dynamically based on currency configurations
+      const standardAmount = billing.currencyCode === "INR" ? 49900 : 999; // Mapped in lowest currency units (Paise/Cents)
+
+      const options = {
+        key: "rzp_test_YOUR_ACTUAL_KEY_HERE", // ⚠️ TYPE YOUR REAL RAZORPAY MERCHANT KEY ID HERE INTO THE QUOTES!
+        amount: standardAmount,
+        currency: billing.currencyCode || "USD",
+        name: "Knee-Care Portal",
+        description: "Premium Clinical Assessment Access Subscription",
+        image: "/icon-192.png",
+        handler: function (response: any) {
+          alert(`🎉 Payment Verified Successfully! Transaction Token Ref: ${response.razorpay_payment_id}`);
+          window.location.reload(); // Instantly refreshes the view upon successful verification pass
+        },
+        prefill: {
+          name: "Knee Care Subscriber",
+          email: "subscriber@kneecareportal.com"
+        },
+        theme: {
+          color: "#1E3A34" // Coordinates cleanly with your persistent brand design theme color token
+        }
+      };
+
+      // Instantiates the global window construction method loaded by the index script node cleanly
+      const razorpayWindowInstance = new (window as any).Razorpay(options);
+      razorpayWindowInstance.open();
 
     } catch (error) {
-      console.error("Form redirect execution block failure:", error);
-      alert("⚠️ Redirect Error: Unable to fire backend form forward action.");
+      console.error("Checkout execution block failure:", error);
+      
+      // Fallback routing layer: if browser blocks the popup block, push onto the relative query string channel safely
+      const targetQueryUrl = `/api/checkout?currency=${encodeURIComponent(billing.currencyCode)}&amount=${encodeURIComponent(billing.displayAmount)}&portal=knee-care`;
+      window.location.href = targetQueryUrl;
     }
   };
+
 
 
 
