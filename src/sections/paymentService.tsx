@@ -86,7 +86,7 @@ export default function PaymentPage() {
 
 
 
-  return (
+    return (
     <div className="max-w-md mx-auto my-12 p-8 bg-white border border-gray-100 rounded-3xl shadow-2xl font-sans">
       <div className="mb-6">
         <span className="text-[9px] font-bold tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-100 uppercase px-2.5 py-1 rounded-md">
@@ -96,7 +96,30 @@ export default function PaymentPage() {
         <p className="text-xs text-gray-400 mt-1 font-medium">Knee Care Portal Premium Clinical Assessment Access</p>
       </div>
 
-      {/* Localized Price Card Container: Shows ONLY one specific regional currency token based on user location */}
+      {/* 🌐 INTERACTIVE GLOBAL CURRENCY SELECTOR DROPDOWN MODULE */}
+      <div className="mb-6">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1.5">
+          Select Preferred Billing Currency:
+        </label>
+        <select
+          value={billing.currencyCode}
+          onChange={(e) => {
+            const selectedCurrencyTarget = e.target.value;
+            if (selectedCurrencyTarget === "INR") setBilling(DISPLAY_REGISTRY.IN);
+            else if (selectedCurrencyTarget === "EUR") setBilling(DISPLAY_REGISTRY.EU);
+            else if (selectedCurrencyTarget === "GBP") setBilling(DISPLAY_REGISTRY.GB);
+            else setBilling(DISPLAY_REGISTRY.US);
+          }}
+          className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 text-xs font-semibold text-gray-700 focus:outline-none focus:border-emerald-500 cursor-pointer shadow-sm transition-all"
+        >
+          <option value="USD">🇺🇸 United States (USD $9.99)</option>
+          <option value="INR">🇮🇳 India (INR ₹499)</option>
+          <option value="EUR">🇪🇺 Eurozone (EUR €8.89)</option>
+          <option value="GBP">🇬🇧 United Kingdom (GBP $9.99)</option>
+        </select>
+      </div>
+
+      {/* Localized Price Card Container: Shows ONLY one specific regional currency token based on selector above */}
       <div className="p-6 bg-gray-50 border border-gray-100 rounded-2xl mb-8 text-center">
         <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider block mb-1">Total Pricing</span>
         <div className="text-5xl font-black text-gray-900 tracking-tight">
@@ -125,4 +148,5 @@ export default function PaymentPage() {
       </div>
     </div>
   );
-}
+};
+
