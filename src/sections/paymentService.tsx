@@ -22,27 +22,32 @@ export default function PaymentPage() {
   const [billing, setBilling] = useState<RegionalUIConfig>(DISPLAY_REGISTRY.DEFAULT);
   const [isResolving, setIsResolving] = useState<boolean>(true);
 
-  useEffect(() => {
-    // 3. Automated single-region locale detector block
-    // No manual dropdown selection toggles or un-mature menus are shown to users
+    useEffect(() => {
+    // 3. AUTOMATED SINGLE-REGION LOCALE DETECTOR WITH URL PARAMETER TESTING HOOK
     try {
+      // 📡 URL EXTRACTION PASS: Intercept direct address bar entries for testing configurations cleanly
+      const queryParameters = new URLSearchParams(window.location.search);
+      const urlForcedRegion = queryParameters.get("region")?.toUpperCase() || queryParameters.get("locale")?.toUpperCase();
+      
       const systemLocale = navigator.language || 'en-US';
       const cleanLocale = systemLocale.toUpperCase();
 
-      if (cleanLocale.includes('-IN') || cleanLocale.includes('HI')) {
-        setBilling(DISPLAY_REGISTRY.IN); // Natively sets the display text grid to ₹499 INR
-      } else if (cleanLocale.includes('-GB')) {
-        setBilling(DISPLAY_REGISTRY.GB); // Natively sets the display text grid to $9.99 USD
-      } else if (cleanLocale.includes('DE') || cleanLocale.includes('FR') || cleanLocale.includes('IT') || cleanLocale.includes('ES')) {
-        setBilling(DISPLAY_REGISTRY.EU); // Natively sets the display text grid to €8.89 EUR
+      // 🌐 MULTI-REGION EVALUATION ENGINE LOOP (PRIORITIZES ADDRESS BAR TESTING INJECTION)
+      if (urlForcedRegion === "IN" || cleanLocale.includes('-IN') || cleanLocale.includes('HI')) {
+        setBilling((DISPLAY_REGISTRY as any).IN || DISPLAY_REGISTRY.DEFAULT); // Sets display text grid to ₹499 INR
+      } else if (urlForcedRegion === "GB" || cleanLocale.includes('-GB')) {
+        setBilling(DISPLAY_REGISTRY.GB); // Sets display text grid to $9.99 USD via GB profile
+      } else if (urlForcedRegion === "EU" || cleanLocale.includes('DE') || cleanLocale.includes('FR') || cleanLocale.includes('IT') || cleanLocale.includes('ES')) {
+        setBilling(DISPLAY_REGISTRY.EU); // Sets display text grid to €8.89 EUR
       } else {
-        setBilling(DISPLAY_REGISTRY.US); // Automatically defaults to $9.99 USD for global target traffic
+        setBilling(DISPLAY_REGISTRY.US); // Defaults to $9.99 USD for global target traffic
       }
     } catch (error) {
       console.error("Automated geographic UI locale selection failure:", error);
       setBilling(DISPLAY_REGISTRY.DEFAULT);
     } finally {
       setIsResolving(false);
+
     }
   }, []);
 
