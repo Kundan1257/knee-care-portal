@@ -46,40 +46,41 @@ export default function PaymentPage() {
     }
   }, []);
 
-    // 💳 DYNAMIC MULTI-CURRENCY BACKEND PAYMENT BRIDGE
-  const handleCheckoutSubmission = async () => {
+      // 📝 DYNAMIC MULTI-CURRENCY BACKEND FORM FORWARD DISPATCHER
+  const handleCheckoutSubmission = () => {
     try {
-      console.log(`Forwarding regional pricing contract to payment engine: ${billing.currencyCode}`);
+      console.log(`Initializing form submission checkout for: ${billing.currencyCode}`);
       alert("Securely initializing your pre-configured Razorpay checkout pipeline...");
 
-      // 📡 FIRE NETWORK ROUTE: Post the user's specific regional pricing data to your backend server node
-      const response = await fetch("/api/checkout", { // ⚠️ SWAP THIS URL TO POINT TO YOUR EXACT BACKEND SERVER ENDPOINT ROUTE (e.g., "/api/razorpay/create-payment-link")
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          currency: billing.currencyCode,     // Dynamically sends "INR", "USD", or "EUR" based on your locale switcher
-          amount: billing.displayAmount,       // Dynamically sends 499, 9.99, or 8.89 matching the selected tier
-          portal: "knee-care"
-        }),
-      });
+      // Generate a hidden structural form element inside memory dynamically to bridge fields cleanly
+      const hiddenFormElement = document.createElement("form");
+      hiddenFormElement.method = "POST";
+      hiddenFormElement.action = "/api/checkout"; // Maps straight onto your backend server address path
 
-      const data = await response.json();
+      // Append your dynamic currency code variable field safely
+      const currencyInputField = document.createElement("input");
+      currencyInputField.type = "hidden";
+      currencyInputField.name = "currency";
+      currencyInputField.value = billing.currencyCode; 
+      hiddenFormElement.appendChild(currencyInputField);
 
-      // Check if your backend successfully generated and streamed back the hosted payment link URL string
-      if (data && (data.url || data.checkout_url || data.payment_url)) {
-        const destinationPaymentUrl = data.url || data.checkout_url || data.payment_url;
-        window.location.href = destinationPaymentUrl; // 🚀 Forwards browser straight to Razorpay's hosted payment screens smoothly
-      } else {
-        throw new Error("⚠️ Backend validation frame rejected payment link request generation.");
-      }
+      // Append your pricing amount variable field safely
+      const amountInputField = document.createElement("input");
+      amountInputField.type = "hidden";
+      amountInputField.name = "amount";
+      amountInputField.value = String(billing.displayAmount); 
+      hiddenFormElement.appendChild(amountInputField);
+
+      // Attach to the live browser viewport document temporarily and force immediate form fire execution
+      document.body.appendChild(hiddenFormElement);
+      hiddenFormElement.submit();
 
     } catch (error) {
-      console.error("Checkout execution block failure:", error);
-      alert("❌ PAYMENT GATEWAY ERROR: Unable to synchronize with your backend payment server node. Verify that your server script is active.");
+      console.error("Form redirect execution block failure:", error);
+      alert("⚠️ Redirect Error: Unable to fire backend form forward action.");
     }
   };
+
 
 
   return (
