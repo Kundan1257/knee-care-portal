@@ -29,14 +29,21 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// 🟢 NEW NETWORK-FIRST HOOK: Pulls fresh live network assets instantly, falls back to offline cache gracefully
+// 🟢 FETCH EVENT INTERCEPTOR: MANAGES OFFLINE CACHE STORAGE PROTOCOLS
 self.addEventListener('fetch', (event) => {
+  // Skip caching for non-GET methods entirely
   if (event.request.method !== 'GET') return;
+
+  // 💳 SAFETY GATE: Bypass the Service Worker entirely for secure payment and checkout paths
+  const url = new URL(event.request.url);
+  if (url.pathname.includes('/checkout') || url.pathname.includes('razorpay')) {
+    return; // Forces the browser to stream directly from live servers without any caching blocks
+  }
 
   event.respondWith(
     fetch(event.request)
       .then((networkResponse) => {
-        if (networkResponse && networkResponse.status === 200) {
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
           const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseClone);
@@ -45,7 +52,15 @@ self.addEventListener('fetch', (event) => {
         return networkResponse;
       })
       .catch(() => {
-        return caches.match(event.request);
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+          
+          return new Response('⚠️ Connection error: Secure payment module requires an active internet connection layer.', {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: new Headers({ 'Content-Type': 'text/plain' })
+          });
+        });
       })
   );
 });
