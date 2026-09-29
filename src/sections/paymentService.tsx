@@ -46,29 +46,41 @@ export default function PaymentPage() {
     }
   }, []);
 
-  // 4. Secure submission click handler
-  // Bypasses local frontend handling entirely to let your existing backend handle the redirect routing safely
-  const handleCheckoutSubmission = () => {
+    // 💳 DYNAMIC MULTI-CURRENCY BACKEND PAYMENT BRIDGE
+  const handleCheckoutSubmission = async () => {
     try {
-      // Look right here: your existing form submission method or API call handles the checkout!
-      // This function triggers your existing backend script logic without revealing any keys or URLs
-      console.log(`Initializing checkout protocol for currency target: ${billing.currencyCode}`);
-      
-      // If your existing GitHub repository code triggers a submit event, you call it here:
-      // example: triggerExistingFormSubmit();
+      console.log(`Forwarding regional pricing contract to payment engine: ${billing.currencyCode}`);
       alert("Securely initializing your pre-configured Razorpay checkout pipeline...");
+
+      // 📡 FIRE NETWORK ROUTE: Post the user's specific regional pricing data to your backend server node
+      const response = await fetch("/api/checkout", { // ⚠️ SWAP THIS URL TO POINT TO YOUR EXACT BACKEND SERVER ENDPOINT ROUTE (e.g., "/api/razorpay/create-payment-link")
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          currency: billing.currencyCode,     // Dynamically sends "INR", "USD", or "EUR" based on your locale switcher
+          amount: billing.displayAmount,       // Dynamically sends 499, 9.99, or 8.89 matching the selected tier
+          portal: "knee-care"
+        }),
+      });
+
+      const data = await response.json();
+
+      // Check if your backend successfully generated and streamed back the hosted payment link URL string
+      if (data && (data.url || data.checkout_url || data.payment_url)) {
+        const destinationPaymentUrl = data.url || data.checkout_url || data.payment_url;
+        window.location.href = destinationPaymentUrl; // 🚀 Forwards browser straight to Razorpay's hosted payment screens smoothly
+      } else {
+        throw new Error("⚠️ Backend validation frame rejected payment link request generation.");
+      }
+
     } catch (error) {
       console.error("Checkout execution block failure:", error);
+      alert("❌ PAYMENT GATEWAY ERROR: Unable to synchronize with your backend payment server node. Verify that your server script is active.");
     }
   };
 
-  if (isResolving) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px] font-sans text-gray-400 text-xs tracking-wider">
-        Initializing native regional checkout gateway...
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-md mx-auto my-12 p-8 bg-white border border-gray-100 rounded-3xl shadow-2xl font-sans">
