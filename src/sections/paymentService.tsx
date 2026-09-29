@@ -46,40 +46,24 @@ export default function PaymentPage() {
     }
   }, []);
 
-      // 📝 DYNAMIC MULTI-CURRENCY BACKEND FORM FORWARD DISPATCHER
+        // 💳 OFFICIAL GLOBAL RAZORPAY BACKEND GET REDIRECT HANDLER (v4.7.4)
   const handleCheckoutSubmission = () => {
     try {
-      console.log(`Initializing form submission checkout for: ${billing.currencyCode}`);
+      console.log(`Forwarding regional pricing contract to payment engine: ${billing.currencyCode}`);
       alert("Securely initializing your pre-configured Razorpay checkout pipeline...");
 
-      // Generate a hidden structural form element inside memory dynamically to bridge fields cleanly
-      const hiddenFormElement = document.createElement("form");
-      hiddenFormElement.method = "POST";
-      hiddenFormElement.action = "/api/checkout"; // Maps straight onto your backend server address path
-
-      // Append your dynamic currency code variable field safely
-      const currencyInputField = document.createElement("input");
-      currencyInputField.type = "hidden";
-      currencyInputField.name = "currency";
-      currencyInputField.value = billing.currencyCode; 
-      hiddenFormElement.appendChild(currencyInputField);
-
-      // Append your pricing amount variable field safely
-      const amountInputField = document.createElement("input");
-      amountInputField.type = "hidden";
-      amountInputField.name = "amount";
-      amountInputField.value = String(billing.displayAmount); 
-      hiddenFormElement.appendChild(amountInputField);
-
-      // Attach to the live browser viewport document temporarily and force immediate form fire execution
-      document.body.appendChild(hiddenFormElement);
-      hiddenFormElement.submit();
+      // 📡 PURE GET REDIRECTION LOOP: Maps your data parameters straight into standard address link extensions
+      const targetQueryUrl = `/api/checkout?currency=${encodeURIComponent(billing.currencyCode)}&amount=${encodeURIComponent(billing.displayAmount)}&portal=knee-care`;
+      
+      // Forces the active browser window viewport to jump straight onto your pre-configured backend redirection channel
+      window.location.href = targetQueryUrl;
 
     } catch (error) {
       console.error("Form redirect execution block failure:", error);
       alert("⚠️ Redirect Error: Unable to fire backend form forward action.");
     }
   };
+
 
 
 
