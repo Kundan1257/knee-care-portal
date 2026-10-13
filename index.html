@@ -2,18 +2,18 @@
 <html lang="en">
   <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://googletagmanager.com"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag("js", new Date());
-    gtag("config", "AW-18363954385");
-  </script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag("js", new Date());
-    gtag("config", "AW-18363954385");
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=AW-18363954385';
+      document.head.appendChild(script);
+      
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "AW-18363954385");
+    }
   </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,6 +25,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#1E3A34" />
+    <script async src="https://googlesyndication.com" crossorigin="anonymous"></script>
     <!-- 🟢 FIXED SDK ELEMENT LAYER: Points straight to the lightweight Checkout SDK script file -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 

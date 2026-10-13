@@ -73,10 +73,10 @@ export const CheckoutSection: React.FC = () => {
             onChange={(e) => setRegion(e.target.value as any)}
             className="w-full bg-zinc-800 border border-zinc-700 text-white px-4 py-3 rounded-xl focus:outline-none focus:border-zinc-500 transition-colors"
           >
-            <option value="SA">South Asia (₹499 INR)</option>
-            <option value="US">United States ($9.99 USD)</option>
-            <option value="UK">United Kingdom ($9.99 USD)</option>
-            <option value="EU">Europe (€8.89 EUR)</option>
+            <option value="SA">South Asia (₹99 INR)</option>
+            <option value="US">United States ($1.99 USD)</option>
+            <option value="UK">United Kingdom ($1.99 USD)</option>
+            <option value="EU">Europe (€1.99 EUR)</option>
           </select>
         </div>
 

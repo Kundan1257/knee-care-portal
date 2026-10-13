@@ -11,11 +11,11 @@ interface RegionalUIConfig {
 // 2. Strict mapping based directly on your subscription price metrics screenshot
 // Secure frontend display data only — no payment link variables or API secret keys exist here
 const DISPLAY_REGISTRY: Record<string, RegionalUIConfig> = {
-  IN: { currencyCode: 'INR', currencySymbol: '₹', displayAmount: 499.00, badgeText: 'South Asia Local Gateway Active' },
-  US: { currencyCode: 'USD', currencySymbol: '$', displayAmount: 9.99,   badgeText: 'United States Local Gateway Active' },
-  GB: { currencyCode: 'USD', currencySymbol: '$', displayAmount: 9.99,   badgeText: 'United Kingdom Local Gateway Active' },
-  EU: { currencyCode: 'EUR', currencySymbol: '€', displayAmount: 8.89,   badgeText: 'Europe Local Gateway Active' },
-  DEFAULT: { currencyCode: 'USD', currencySymbol: '$', displayAmount: 9.99, badgeText: 'International Payment Gateway Active' }
+  IN: { currencyCode: 'INR', currencySymbol: '₹', displayAmount: 99.00, badgeText: 'South Asia Local Gateway Active' },
+  US: { currencyCode: 'USD', currencySymbol: '$', displayAmount: 1.99,   badgeText: 'United States Local Gateway Active' },
+  GB: { currencyCode: 'USD', currencySymbol: '$', displayAmount: 1.99,   badgeText: 'United Kingdom Local Gateway Active' },
+  EU: { currencyCode: 'EUR', currencySymbol: '€', displayAmount: 1.99,   badgeText: 'Europe Local Gateway Active' },
+  DEFAULT: { currencyCode: 'USD', currencySymbol: '$', displayAmount: 1.99, badgeText: 'International Payment Gateway Active' }
 };
 
 export default function PaymentPage() {
@@ -34,13 +34,13 @@ export default function PaymentPage() {
 
       // 🌐 MULTI-REGION EVALUATION ENGINE LOOP (PRIORITIZES ADDRESS BAR TESTING INJECTION)
       if (urlForcedRegion === "IN" || cleanLocale.includes('-IN') || cleanLocale.includes('HI')) {
-        setBilling((DISPLAY_REGISTRY as any).IN || DISPLAY_REGISTRY.DEFAULT); // Sets display text grid to ₹499 INR
+        setBilling((DISPLAY_REGISTRY as any).IN || DISPLAY_REGISTRY.DEFAULT); // Sets display text grid to ₹99 INR
       } else if (urlForcedRegion === "GB" || cleanLocale.includes('-GB')) {
-        setBilling(DISPLAY_REGISTRY.GB); // Sets display text grid to $9.99 USD via GB profile
+        setBilling(DISPLAY_REGISTRY.GB); // Sets display text grid to $1.99 USD via GB profile
       } else if (urlForcedRegion === "EU" || cleanLocale.includes('DE') || cleanLocale.includes('FR') || cleanLocale.includes('IT') || cleanLocale.includes('ES')) {
-        setBilling(DISPLAY_REGISTRY.EU); // Sets display text grid to €8.89 EUR
+        setBilling(DISPLAY_REGISTRY.EU); // Sets display text grid to €1.99 EUR
       } else {
-        setBilling(DISPLAY_REGISTRY.US); // Defaults to $9.99 USD for global target traffic
+        setBilling(DISPLAY_REGISTRY.US); // Defaults to $1.99 USD for global target traffic
       }
     } catch (error) {
       console.error("Automated geographic UI locale selection failure:", error);
@@ -69,8 +69,14 @@ export default function PaymentPage() {
       // Extract the absolute target link based on currency selection, or default safely back to USD target configuration
       const activeBaseUrl = pageLinkRegistry[billing.currencyCode || "USD"] || pageLinkRegistry.USD;
       
+      let payloadAmount = 199;
+      if (billing.currencyCode === 'INR') payloadAmount = 9900;
+      else if (billing.currencyCode === 'USD') payloadAmount = 199;
+      else if (billing.currencyCode === 'EUR') payloadAmount = 199;
+      else if (billing.currencyCode === 'GBP') payloadAmount = 199;
+      
       // Inject your cross-border tracking variables straight onto the secure URL address path
-      const targetQueryUrl = `${activeBaseUrl}?currency=${encodeURIComponent(billing.currencyCode)}&amount=${encodeURIComponent(billing.displayAmount)}&portal=knee-care`;
+      const targetQueryUrl = `${activeBaseUrl}?currency=${encodeURIComponent(billing.currencyCode)}&amount=${payloadAmount}&portal=knee-care`;
       
       // Forces the active browser window viewport to jump straight onto the live merchant dashboard screen safely
       window.location.href = targetQueryUrl;
@@ -112,10 +118,10 @@ export default function PaymentPage() {
           }}
           className="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 text-xs font-semibold text-gray-700 focus:outline-none focus:border-emerald-500 cursor-pointer shadow-sm transition-all"
         >
-          <option value="USD">🇺🇸 United States (USD $9.99)</option>
-          <option value="INR">🇮🇳 India (INR ₹499)</option>
-          <option value="EUR">🇪🇺 Eurozone (EUR €8.89)</option>
-          <option value="GBP">🇬🇧 United Kingdom (GBP $9.99)</option>
+          <option value="USD">🇺🇸 United States (USD $1.99)</option>
+          <option value="INR">🇮🇳 India (INR ₹99)</option>
+          <option value="EUR">🇪🇺 Eurozone (EUR €1.99)</option>
+          <option value="GBP">🇬🇧 United Kingdom (GBP $1.99)</option>
         </select>
       </div>
 
