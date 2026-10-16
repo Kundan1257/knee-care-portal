@@ -1,4 +1,4 @@
-import { TrackerSection } from "./sections/TrackerSection.js";
+import { TrackerSection } from "./sections/TrackerSection.tsx";
 import { Analytics } from '@vercel/analytics/react';
 /**
  * @license
