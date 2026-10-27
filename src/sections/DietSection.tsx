@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Droplets, Zap, Leaf, Coffee, Egg, Utensils, ChevronDown, Lock, ArrowRight, Sparkles } from '../App.js';
 import { Card, Section, PageWrapper } from '../App.js';
 import { RECIPES, TEAS, Tea } from '../constants.js';
-//import { usePremium } from '../hooks/useAuth';
+import { usePremium } from '../hooks/useAuth.js';
 import { useNavigate } from 'react-router-dom';
 
 const TeaItem: React.FC<{ tea: Tea }> = ({ tea }) => {
@@ -91,10 +91,113 @@ const NutritionItem = ({ icon: Icon, title, description }: { icon: any, title: s
   </motion.div>
 );
 
+export const DietaryDefenseModule: React.FC = () => {
+  const isPremium = usePremium();
+  const navigate = useNavigate();
+
+  return (
+    <section className="space-y-4" aria-label="Anti-inflammatory meal combinations">
+      <div>
+        <h3 className="text-sm font-black uppercase tracking-widest text-emerald-300">Anti-inflammatory meal combinations</h3>
+        <p className="mt-1 text-xs leading-relaxed text-slate-400">Whole-food meal ideas from the Dietary Defense library.</p>
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {RECIPES.map((recipe, index) => (
+          isPremium || index === 0 ? (
+            <article key={recipe.name} className="rounded-xl border border-slate-700/80 bg-slate-950/60 p-4">
+              <h4 className="text-sm font-bold text-slate-100">{recipe.name}</h4>
+              <p className="mt-1 text-xs leading-relaxed text-slate-300">{recipe.description}</p>
+            </article>
+          ) : (
+            <button
+              key={recipe.name}
+              type="button"
+              onClick={() => navigate('/checkout')}
+              className="bg-slate-900/80 border border-amber-500/20 backdrop-blur-sm rounded-xl p-6 text-center text-xs text-amber-400 font-bold"
+            >
+              🔒 Premium Feature: Unlock Technical Library
+            </button>
+          )
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export const ThermalInfusionsModule: React.FC = () => {
+  const isPremium = usePremium();
+  const navigate = useNavigate();
+  const date = new Date();
+  const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  const storageKey = `knee-care-tea-log-${dateKey}`;
+  const [loggedTeas, setLoggedTeas] = useState<Set<string>>(
+    () => new Set(localStorage.getItem(storageKey)?.split('\n').filter(Boolean) ?? [])
+  );
+
+  const toggleTeaLog = (teaName: string) => {
+    const updatedLogs = new Set(loggedTeas);
+    if (updatedLogs.has(teaName)) {
+      updatedLogs.delete(teaName);
+    } else {
+      updatedLogs.add(teaName);
+    }
+    setLoggedTeas(updatedLogs);
+    localStorage.setItem(storageKey, [...updatedLogs].join('\n'));
+  };
+
+  return (
+    <section className="space-y-4" aria-label="Daily warming fluid log">
+      <div>
+        <h3 className="text-sm font-black uppercase tracking-widest text-amber-300">Daily warm infusion log</h3>
+        <p className="mt-1 text-xs leading-relaxed text-slate-400">Tap a tea to record or update today’s warming-fluid log.</p>
+      </div>
+      <ul className="space-y-2">
+        {TEAS.map((tea, index) => {
+          const isLogged = loggedTeas.has(tea.name);
+          if (!isPremium && index > 0) {
+            return (
+              <li key={tea.name}>
+                <button
+                  type="button"
+                  onClick={() => navigate('/checkout')}
+                  className="bg-slate-900/80 border border-amber-500/20 backdrop-blur-sm rounded-xl p-6 text-center text-xs text-amber-400 font-bold w-full"
+                >
+                  🔒 Premium Feature: Unlock Technical Library
+                </button>
+              </li>
+            );
+          }
+
+          return (
+            <li key={tea.name} className="flex items-center justify-between gap-3 rounded-xl border border-slate-700/80 bg-slate-950/60 p-3">
+              <div className="min-w-0">
+                <h4 className="text-sm font-bold text-slate-100">{tea.name}</h4>
+                <p className="mt-1 text-xs leading-relaxed text-slate-400">{tea.benefit}</p>
+              </div>
+              <button
+                type="button"
+                aria-pressed={isLogged}
+                onClick={() => toggleTeaLog(tea.name)}
+                className={`shrink-0 rounded-lg border px-3 py-2 text-[10px] font-black uppercase tracking-wider transition-colors ${
+                  isLogged
+                    ? 'border-amber-400/40 bg-amber-400/10 text-amber-200'
+                    : 'border-slate-600 bg-slate-800 text-slate-300 hover:bg-slate-700'
+                }`}
+              >
+                {isLogged ? 'Logged today' : 'Log infusion'}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+};
+
 export const DietSection: React.FC = () => {
   const [recipesOpen, setRecipesOpen] = useState(false);
   const [herbalOpen, setHerbalOpen] = useState(false);
-  const isPremium = localStorage.getItem('is_premium') === 'true';
+  const isPremium = usePremium();
 
 
   const navigate = useNavigate();
@@ -164,7 +267,7 @@ export const DietSection: React.FC = () => {
       <div className="max-w-4xl mx-auto space-y-8">
         <Card className="p-8 border-none shadow-[0_20px_50px_rgba(0,0,0,0.05)] bg-white/80 backdrop-blur-md rounded-[3.5rem] overflow-hidden relative group/card border border-white">
           <button 
-            onClick={isPremium ? () => setRecipesOpen(!recipesOpen) : handleLockedClick}
+            onClick={() => setRecipesOpen(!recipesOpen)}
             className="w-full flex items-center justify-between group"
           >
             <div className="flex items-center gap-6">
@@ -191,7 +294,7 @@ export const DietSection: React.FC = () => {
           </button>
           
           <AnimatePresence>
-            {isPremium && recipesOpen && (
+            {recipesOpen && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
@@ -200,19 +303,30 @@ export const DietSection: React.FC = () => {
               >
                 <div className="pt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
                   {RECIPES.map((recipe, i) => (
-                    <motion.div 
-                      key={i} 
-                      whileHover={{ y: -8, scale: 1.02 }}
-                      className="p-8 rounded-[2.5rem] bg-white border border-white shadow-sm hover:shadow-2xl transition-all group/item"
-                    >
-                      <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center mb-6 text-accent">
-                        <Leaf size={20} />
-                      </div>
-                      <h4 className="text-xl font-bold text-primary mb-3 group-hover/item:text-accent transition-colors tracking-tight">
-                        {recipe.name}
-                      </h4>
-                      <p className="text-sm text-gray-500 leading-relaxed font-medium">{recipe.description}</p>
-                    </motion.div>
+                    isPremium || i === 0 ? (
+                      <motion.div
+                        key={recipe.name}
+                        whileHover={{ y: -8, scale: 1.02 }}
+                        className="p-8 rounded-[2.5rem] bg-white border border-white shadow-sm hover:shadow-2xl transition-all group/item"
+                      >
+                        <div className="w-10 h-10 bg-accent/10 rounded-xl flex items-center justify-center mb-6 text-accent">
+                          <Leaf size={20} />
+                        </div>
+                        <h4 className="text-xl font-bold text-primary mb-3 group-hover/item:text-accent transition-colors tracking-tight">
+                          {recipe.name}
+                        </h4>
+                        <p className="text-sm text-gray-500 leading-relaxed font-medium">{recipe.description}</p>
+                      </motion.div>
+                    ) : (
+                      <button
+                        key={recipe.name}
+                        type="button"
+                        onClick={handleLockedClick}
+                        className="bg-slate-900/80 border border-amber-500/20 backdrop-blur-sm rounded-xl p-6 text-center text-xs text-amber-400 font-bold"
+                      >
+                        🔒 Premium Feature: Unlock Technical Library
+                      </button>
+                    )
                   ))}
                 </div>
               </motion.div>
@@ -236,7 +350,7 @@ export const DietSection: React.FC = () => {
 
         <Card className="p-8 border-none shadow-[0_20px_50px_rgba(0,0,0,0.05)] bg-white/80 backdrop-blur-md rounded-[3.5rem] overflow-hidden relative group/card border border-white">
           <button 
-            onClick={isPremium ? () => setHerbalOpen(!herbalOpen) : handleLockedClick}
+            onClick={() => setHerbalOpen(!herbalOpen)}
             className="w-full flex items-center justify-between group"
           >
             <div className="flex items-center gap-6">
@@ -263,7 +377,7 @@ export const DietSection: React.FC = () => {
           </button>
           
           <AnimatePresence>
-            {isPremium && herbalOpen && (
+            {herbalOpen && (
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
@@ -272,7 +386,18 @@ export const DietSection: React.FC = () => {
               >
                 <div className="pt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
                   {TEAS.map((tea, i) => (
-                    <TeaItem key={i} tea={tea} />
+                    isPremium || i === 0 ? (
+                      <TeaItem key={tea.name} tea={tea} />
+                    ) : (
+                      <button
+                        key={tea.name}
+                        type="button"
+                        onClick={handleLockedClick}
+                        className="bg-slate-900/80 border border-amber-500/20 backdrop-blur-sm rounded-xl p-6 text-center text-xs text-amber-400 font-bold"
+                      >
+                        🔒 Premium Feature: Unlock Technical Library
+                      </button>
+                    )
                   ))}
                 </div>
               </motion.div>

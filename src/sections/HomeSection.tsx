@@ -1,4 +1,6 @@
 import React from 'react';
+import { DietaryDefenseModule, ThermalInfusionsModule } from './DietSection.js';
+import { ExerciseLifestyleModule, RelaxationLifestyleModule } from './ExerciseSection.js';
 
 interface PreventativeStabilityProtocolProps {
   movementIntensityScore: number;
@@ -15,23 +17,23 @@ function PreventativeStabilityProtocol({
 
   const zone = activitySeverity <= 3
     ? {
-        style: "border-emerald-200 bg-emerald-50 text-emerald-950",
+        style: "border-emerald-500/30 bg-emerald-950/50 text-emerald-100",
         message: "🟢 Routine Support: Baseline Comfort. Action: Your knees are moving comfortably through light daily tasks. Incorporating a light, flexible compression sleeve or knee support during prolonged standing or walks can help maintain natural joint warmth and thermal comfort."
       }
     : activitySeverity <= 7
       ? {
-          style: "border-amber-200 bg-amber-50 text-amber-950",
+          style: "border-amber-500/30 bg-amber-950/50 text-amber-100",
           message: "🟡 Routine Support: Active Load Awareness. Action: Your daily routine works are adding standard structural load to your joints. Utilizing a standard supportive knee brace during daily errands or your office commute is an everyday approach to assist joint tracking, retain heat, and support overall stability while moving."
         }
       : {
-          style: "border-rose-200 bg-rose-50 text-rose-950",
+          style: "border-rose-500/30 bg-rose-950/50 text-rose-100",
           message: "🔴 Routine Support: Elevated Activity Notice. Action: Sports activities or heavy routine moving increase daily joint exertion. Wearing a structured preventative knee brace during heavy physical tasks or high-impact routines serves as a supportive external wrap, helping manage mechanical stress and preserving daily movement comfort."
         };
 
   return (
-    <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 max-w-md mx-auto">
-      <h2 className="text-base font-black text-gray-900 tracking-tight flex items-center gap-1.5">🛡️ Active Preventative Protocol</h2>
-      <p className="mt-2 text-xs leading-5 text-slate-600 font-medium">
+    <section className="mt-6 max-w-md mx-auto rounded-2xl border border-slate-800/80 bg-slate-900/60 p-5 text-slate-100 shadow-sm sm:p-6">
+      <h2 className="text-base font-black text-slate-100 tracking-tight flex items-center gap-1.5">🛡️ Active Preventative Protocol</h2>
+      <p className="mt-2 text-xs leading-5 text-slate-300 font-medium">
         The Power of Joint Compression: Utilizing a supportive knee brace or wrap during active routines is a common worldwide lifestyle habit to retain natural body heat, support local ligaments, and maintain structural comfort during your normal daily routine works.
       </p>
       <div role="status" className={`mt-4 rounded-xl border p-4 text-xs leading-5 font-bold ${zone.style}`}>{zone.message}</div>
@@ -41,9 +43,11 @@ function PreventativeStabilityProtocol({
 
 interface HomeSectionProps {
   setActiveSection?: (section: string) => void;
+  activeBox?: string | null;
+  setActiveBox?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) => {
+export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, activeBox, setActiveBox }) => {
     const handleNavigation = (target: string) => {
     // 1. Try to find the exact container ID on the page (e.g., id="ex" or id="about")
     let element = document.getElementById(target);
@@ -69,58 +73,85 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) =>
     }
   };
 
-
+  const lifestyleCards = [
+    {
+      id: 'diet',
+      title: 'Dietary Defense',
+      icon: '🌿',
+      style: 'bg-emerald-950/40 border-emerald-500/30 hover:border-emerald-400',
+    },
+    {
+      id: 'tea',
+      title: 'Thermal Infusions',
+      icon: '☕',
+      style: 'bg-amber-950/40 border-amber-500/30 hover:border-amber-400',
+    },
+    {
+      id: 'exercise',
+      title: 'Mobility Loops',
+      icon: '🏋️‍♂️',
+      style: 'bg-indigo-950/40 border-indigo-500/30 hover:border-indigo-400',
+    },
+    {
+      id: 'relaxation',
+      title: 'Recovery Rest',
+      icon: '🧘‍♂️',
+      style: 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400',
+    },
+  ];
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 py-8 flex flex-col gap-8 font-sans antialiased text-gray-800">
+    <div className="w-full max-w-2xl mx-auto px-4 py-8 flex flex-col gap-8 font-sans antialiased text-slate-100">
       
       {/* 1. PSYCHOLOGICAL SENIOR RELATION CARD */}
-      <div className="w-full bg-white border border-gray-100 rounded-[2rem] p-6 shadow-sm flex flex-col gap-4 relative min-h-fit pb-6 overflow-visible">
+      <div className="w-full rounded-[2rem] border border-slate-800/80 bg-slate-900/60 p-6 shadow-sm flex flex-col gap-4 relative min-h-fit pb-6 overflow-visible">
         <div>
-          <h3 className="text-xl font-black text-gray-900 tracking-tight leading-snug">
+          <h3 className="text-xl font-black text-slate-100 tracking-tight leading-snug">
             Does Your Knee Feel Unstable During Daily Tasks? 🏡
           </h3>
-          <p className="text-sm text-gray-500 font-semibold mt-1">
+          <p className="text-sm text-slate-300 font-semibold mt-1">
             If you experience these common frustrations, you are in the right place:
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 my-1">
-          {/* 💡 Box 1: Changed bg-gray-50 to Medical Blue styling */}
-          <div className="flex items-start gap-3 p-3 bg-blue-50/50 border border-blue-100/30 shadow-sm rounded-xl">
-            <span className="text-xl shrink-0">🛌</span>
-            <p className="text-sm text-gray-700 font-medium leading-relaxed">
-              <strong>Morning Stiffness:</strong> Feeling hesitation or sharp discomfort during your very first steps out of bed.
-            </p>
-          </div>
-          
-          {/* 💡 Box 2: Changed bg-gray-50 to Medical Blue styling */}
-          <div className="flex items-start gap-3 p-3 bg-blue-50/50 border border-blue-100/30 shadow-sm rounded-xl">
-            <span className="text-xl shrink-0">🪜</span>
-            <p className="text-sm text-gray-700 font-medium leading-relaxed">
-              <strong>Stairway Hesitation:</strong> Lacking confidence or holding tightly to handrails when walking downstairs.
-            </p>
-          </div>
-          
-          {/* 💡 Box 3: Changed bg-gray-50 to Medical Blue styling */}
-          <div className="flex items-start gap-3 p-3 bg-blue-50/50 border border-blue-100/30 shadow-sm rounded-xl">
-            <span className="text-xl shrink-0">🛋️</span>
-            <p className="text-sm text-gray-700 font-medium leading-relaxed">
-              <strong>Rising Strain:</strong> Feeling deep joint pressure when pushing yourself up from a deep couch or low chair.
-            </p>
-          </div>
-</div>
+        <section className="w-full flex flex-col gap-4" aria-label="Lifestyle support">
+          <h4 className="text-base font-extrabold text-slate-100 uppercase tracking-tight">Lifestyle Support</h4>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {lifestyleCards.map((card) => {
+              const isActive = activeBox === card.id;
 
-
-                <div className="pt-2 border-t border-gray-100">
-          <h4 className="font-extrabold text-sm text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
-            🌿 How This Independent Portal Restores Your Freedom
-          </h4>
-          <p className="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
-            Knee-Care Portal operates as your daily privacy-first tracking assistant. By logging your bracing habits, physical therapy exercises, and fatigue metrics consistently, you build an independent personal history to analyze joint stability loops with absolute data transparency.
-          </p>
-        </div>
-
+              return (
+                <div key={card.id} className={`w-full rounded-2xl border p-4 text-white shadow-sm transition-colors ${card.style} ${isActive ? 'ring-2 ring-white/20' : ''}`}>
+                  <button
+                    type="button"
+                    aria-expanded={isActive}
+                    aria-controls={`lifestyle-${card.id}`}
+                    onClick={() => setActiveBox?.(isActive ? null : card.id)}
+                    className="w-full rounded-xl p-1 text-left hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+                  >
+                    <span className="flex items-center justify-between gap-4">
+                      <span className="flex items-center gap-4">
+                        <span className="text-2xl shrink-0" aria-hidden="true">{card.icon}</span>
+                        <span className="font-black text-sm">{card.title}</span>
+                      </span>
+                      <span className="text-slate-200 text-lg" aria-hidden="true">{isActive ? '−' : '+'}</span>
+                    </span>
+                  </button>
+                  <div
+                    id={`lifestyle-${card.id}`}
+                    hidden={!isActive}
+                    className="mt-4 border-t border-white/10 pt-4"
+                  >
+                    {activeBox === 'diet' && <DietaryDefenseModule />}
+                    {activeBox === 'tea' && <ThermalInfusionsModule />}
+                    {activeBox === 'exercise' && <ExerciseLifestyleModule />}
+                    {activeBox === 'relaxation' && <RelaxationLifestyleModule />}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
       </div>
 
       {/* 2. STABILITY BREAKTHROUGH CARD */}
@@ -135,7 +166,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) =>
           💡 PRIVACY TRACKING PROTOCOL: Use this independent checklist interface to log your daily stabilization braces, joint alignment exercises, and recovery parameters with 100% data anonymity.
 
         </p>
-                <p className="mt-5 text-sm md:text-base leading-relaxed text-gray-200 font-medium">
+                <p className="mt-5 text-sm md:text-base leading-relaxed text-slate-200 font-medium">
           Knee-Care Portal functions as a secure, local-first utility to map structural habit consistency over time without bloated third-party tracking scripts.
         </p>
 
@@ -148,7 +179,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) =>
               e.stopPropagation();
               handleNavigation('ex');
             }}
-            className="w-full rounded-full bg-white py-4 text-center text-sm md:text-base font-black text-gray-900 shadow transition hover:bg-gray-100 active:scale-[0.98] cursor-pointer block relative z-50 pointer-events-auto"
+            className="w-full rounded-full border border-slate-700 bg-slate-900/60 py-4 text-center text-sm md:text-base font-black text-slate-100 shadow transition hover:bg-slate-800 active:scale-[0.98] cursor-pointer block relative z-50 pointer-events-auto"
           >
             Explore Movement Guides
           </button>
@@ -173,75 +204,22 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection }) =>
 
       {/* 3. DUAL BENEFIT GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
-        <div className="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm flex flex-col items-start gap-2.5">
+        <div className="p-6 rounded-2xl border border-slate-800/80 bg-slate-900/60 shadow-sm flex flex-col items-start gap-2.5">
           <span className="text-3xl">🛡️</span>
-          <h4 className="font-extrabold text-base text-gray-900">Stability & Confidence</h4>
-          <p className="text-sm text-gray-600 leading-relaxed font-medium">Dynamic protection designed to reinforce joints.</p>
+          <h4 className="font-extrabold text-base text-slate-100">Stability & Confidence</h4>
+          <p className="text-sm text-slate-300 leading-relaxed font-medium">Dynamic protection designed to reinforce joints.</p>
         </div>
-        <div className="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm flex flex-col items-start gap-2.5">
+        <div className="p-6 rounded-2xl border border-slate-800/80 bg-slate-900/60 shadow-sm flex flex-col items-start gap-2.5">
           <span className="text-3xl">⚡</span>
-          <h4 className="font-extrabold text-base text-gray-900">Natural Support</h4>
-          <p className="text-sm text-gray-600 leading-relaxed font-medium">Targeted pathways that minimize direct joint loading friction.</p>
-        </div>
-      </div>
-
-      {/* 4. DAILY ROUTINE HABITS */}
-      <div className="w-full flex flex-col gap-4 mt-2">
-        <div>
-          <h3 className="text-xl font-extrabold text-gray-900 uppercase tracking-tight">Daily Routine Habits</h3>
-        </div>
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-5 p-5 rounded-xl bg-white border border-gray-100 shadow-xs">
-            <span className="text-2xl shrink-0">🚶</span>
-            <div>
-              <p className="font-black text-sm text-gray-900">Walking</p>
-              <p className="text-sm text-gray-600 mt-0.5 font-medium">Step up with the stronger leg, down with the weak.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-5 p-5 rounded-xl bg-white border border-gray-100 shadow-xs">
-            <span className="text-2xl shrink-0">🪜</span>
-            <div>
-              <p className="font-black text-sm text-gray-900">Stairways</p>
-              <p className="text-sm text-gray-600 mt-0.5 font-medium">Always use handrails for added stability.</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-5 p-5 rounded-xl bg-white border border-gray-100 shadow-xs">
-            <span className="text-2xl shrink-0">🪑</span>
-            <div>
-              <p className="font-black text-sm text-gray-900">Posture</p>
-              <p className="text-sm text-gray-600 mt-0.5 font-medium">Avoid crossing legs. Keep a 90-degree angle.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 5. BIOLOGICAL RECOVERY */}
-      <div className="w-full flex flex-col gap-4 mt-4">
-        <div>
-          <h3 className="text-xl font-extrabold text-gray-900 uppercase tracking-tight">Biological Recovery</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-5 rounded-xl bg-white border border-gray-100 shadow-xs flex gap-4">
-            <span className="text-2xl shrink-0">🧊</span>
-            <div>
-              <p className="font-black text-sm text-gray-900">Ice Therapy</p>
-              <p className="text-sm text-gray-600 mt-1 font-medium">Apply for 15-20 mins after activity.</p>
-            </div>
-          </div>
-          <div className="p-5 rounded-xl bg-white border border-gray-100 shadow-xs flex gap-4">
-            <span className="text-2xl shrink-0">🩹</span>
-            <div>
-              <p className="font-black text-sm text-gray-900">Compression</p>
-              <p className="text-sm text-gray-600 mt-1 font-medium">Use a light wrap to maintain stability.</p>
-            </div>
-          </div>
+          <h4 className="font-extrabold text-base text-slate-100">Natural Support</h4>
+          <p className="text-sm text-slate-300 leading-relaxed font-medium">Targeted pathways that minimize direct joint loading friction.</p>
         </div>
       </div>
 
       {/* 6. EXPERT BANNER */}
-      <div className="w-full mt-6 p-6 rounded-2xl bg-emerald-50/60 border border-emerald-100 text-center flex flex-col gap-2.5">
-        <div className="text-xs font-black tracking-widest uppercase text-emerald-800">Consistency Is Key • Expert Support Required</div>
-        <p className="text-sm md:text-base text-emerald-950 font-bold leading-relaxed italic">
+      <div className="w-full mt-6 p-6 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 text-center flex flex-col gap-2.5">
+        <div className="text-xs font-black tracking-widest uppercase text-emerald-200">Consistency Is Key • Expert Support Required</div>
+        <p className="text-sm md:text-base text-emerald-100 font-bold leading-relaxed italic">
           "Your Recovery Journey: Every small action contributes to long-term joint health."
         </p>
       </div>

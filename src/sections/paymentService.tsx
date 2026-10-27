@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft } from 'lucide-react';
 
 // 1. Define clean type specifications for your visual interface display metrics
 interface RegionalUIConfig {
@@ -18,7 +20,12 @@ const DISPLAY_REGISTRY: Record<string, RegionalUIConfig> = {
   DEFAULT: { currencyCode: 'USD', currencySymbol: '$', displayAmount: 1.99, badgeText: 'International Payment Gateway Active' }
 };
 
-export default function PaymentPage() {
+interface PaymentPageProps {
+  onBackHome: () => void;
+}
+
+export default function PaymentPage({ onBackHome }: PaymentPageProps) {
+  const navigate = useNavigate();
   const [billing, setBilling] = useState<RegionalUIConfig>(DISPLAY_REGISTRY.DEFAULT);
   const [isResolving, setIsResolving] = useState<boolean>(true);
 
@@ -87,13 +94,24 @@ export default function PaymentPage() {
     }
   };
 
-
+  const handleBackHome = () => {
+    onBackHome();
+    navigate('/', { replace: true });
+  };
 
 
 
 
     return (
     <div className="max-w-md mx-auto my-12 p-8 bg-white border border-gray-100 rounded-3xl shadow-2xl font-sans">
+      <button
+        type="button"
+        onClick={handleBackHome}
+        className="flex items-center gap-2 text-slate-400 hover:text-emerald-400 font-bold text-sm mb-6 cursor-pointer"
+      >
+        <ChevronLeft size={18} aria-hidden="true" />
+        <span>Back</span>
+      </button>
       <div className="mb-6">
         <span className="text-[9px] font-bold tracking-widest text-emerald-600 bg-emerald-50 border border-emerald-100 uppercase px-2.5 py-1 rounded-md">
           {billing.badgeText}
@@ -155,4 +173,3 @@ export default function PaymentPage() {
     </div>
   );
 };
-

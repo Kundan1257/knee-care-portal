@@ -94,6 +94,8 @@ import ExerciseSection from './sections/ExerciseSection';
 import DietSection from './sections/DietSection';
 import HelpSection from './sections/HelpSection';
 import PaymentPage from './sections/paymentService';
+import Header from './components/Header';
+import BackToDashboard from './components/BackToDashboard';
 
 
 
@@ -287,169 +289,22 @@ export const KneeIcon = ({ size = 24, className = "" }: { size?: number; classNa
 
 export const AppLogo = ({ size = "small" }: { size?: "small" | "large" }) => {
   const dimensions = size === "large" ? "w-28 h-28" : "w-10 h-10";
-  const iconSize = size === "large" ? 48 : 20;
 
   return (
     <div className={cn(
       dimensions,
       "bg-primary rounded-[2rem] flex items-center justify-center shadow-[0_15px_40px_rgba(30,58,52,0.2)] border border-white/10"
     )}>
-      <KneeIcon size={iconSize} />
+      <img
+        src="/icon-192.png"
+        alt="Knee-Care logo"
+        className="h-full w-full rounded-[inherit] object-cover"
+      />
     </div>
   );
 };
 
 export const AppLogoLarge = () => <AppLogo size="large" />;
-
-const navItems = [
-  { path: '/', icon: HomeIcon, label: 'Home' },
-  { path: '/exercises', icon: Activity, label: 'Ex' },
-  { path: '/diet', icon: Utensils, label: 'Diet' },
-  { path: '/help', icon: HelpCircle, label: 'Help' },
- // { path: '/premium', icon: Star, label: 'Premium' },
-  { path: '/about', icon: Info, label: 'About' },
-];
-
-const Navbar = () => {
-  const location = useLocation();
-  const { isLoggedIn, logout } = React.useContext(AuthContext);
-  const [showGuide, setShowGuide] = useState(false);
-
-  useEffect(() => {
-    const savePrompt = (e: Event) => {
-      e.preventDefault();
-      (window as any).stashedInstallPrompt = e;
-    };
-    window.addEventListener('beforeinstallprompt', savePrompt);
-    return () => window.removeEventListener('beforeinstallprompt', savePrompt);
-  }, []);
-
-  const handleCustomInstallClick = () => {
-    const promptEvent = (window as any).stashedInstallPrompt;
-    if (promptEvent) {
-      promptEvent.prompt();
-      promptEvent.userChoice.then((choiceResult: { outcome: string }) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User successfully installed Knee-Care via custom UI button');
-        }
-        (window as any).stashedInstallPrompt = null;
-      });
-    } else {
-      // 🚀 USER-FIRST FALLBACK: If the browser locks the token, pop up instructions instantly!
-      setShowGuide(true);
-    }
-  };
-
-  return (
-    <>
-      {/* 📥 COMPILER-SAFE POPUP MODAL DIRECTIONS */}
-      {showGuide && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.75)',
-          backdropFilter: 'blur(4px)',
-          zIndex: 9999,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '16px'
-        }}>
-          <div style={{
-            backgroundColor: '#1E3A34',
-            color: '#ffffff',
-            padding: '24px',
-            borderRadius: '16px',
-            maxWidth: '384px',
-            width: '100%',
-            border: '1px solid #10b981',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            position: 'relative'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-              <span style={{ fontSize: '24px' }}>📥</span>
-              <h3 style={{ fontSize: '18px', fontWeight: 'bold', margin: 0, color: '#ffffff' }}>Install Knee-Care App</h3>
-            </div>
-            <p style={{ fontSize: '14px', color: '#d1fae5', lineHeight: '1.6', marginBottom: '20px', margin: 0 }}>
-              Access your clinical Gemini AI joint routines instantly from your phone's home screen or laptop desktop!
-            </p>
-            <div style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.3)', fontSize: '14px', marginBottom: '24px' }}>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '12px' }}>
-                <span style={{ backgroundColor: '#10b981', color: '#ffffff', fontWeight: 'bold', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>1</span>
-                <span>Tap the <strong>Three Dots Menu (⋮)</strong> or the <strong>Install Icon (📥)</strong> in your browser's top bar layout row.</span>
-              </div>
-              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <span style={{ backgroundColor: '#10b981', color: '#ffffff', fontWeight: 'bold', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>2</span>
-                <span>Select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong> to pin it flawlessly.</span>
-              </div>
-            </div>
-            <button 
-              onClick={() => setShowGuide(false)}
-              style={{
-                width: '100%',
-                backgroundColor: '#10b981',
-                color: '#ffffff',
-                padding: '12px 0',
-                borderRadius: '12px',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                border: 'none',
-                fontSize: '14px'
-              }}
-            >
-              Got It, Close Instructions
-            </button>
-          </div>
-        </div>
-      )}
-
-      <header className="bg-white/80 backdrop-blur-xl border-b border-border/20 sticky top-0 z-[100] transition-all duration-500">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="flex flex-col lg:flex-row justify-between items-center py-6 lg:h-24 gap-8">
-            <Link to="/" className="flex items-center gap-3 group">
-              <AppLogo />
-              <span className="font-black text-2xl text-primary tracking-tighter group-hover:text-accent transition-colors">Knee-Care</span>
-            </Link>
-
-            <div className="flex items-center gap-2 md:gap-4 overflow-x-auto pb-2 md:pb-0 scrollbar-hide w-full lg:w-auto justify-start lg:justify-end">
-              <nav className="flex items-center gap-1 md:gap-2">
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/">Home</Link>
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/exercises' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/exercises">Ex</Link>
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/diet' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/diet">Diet</Link>
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/help' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/help">Help</Link>
-                <Link className={`text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 px-5 py-3 rounded-2xl whitespace-normal ${location.pathname === '/about' ? 'text-primary bg-primary/5 shadow-sm' : 'text-gray-400 hover:text-primary hover:bg-muted/50'}`} to="/about">About</Link>
-                
-                {/* 🚀 FIXED UNCONDITIONAL VISIBILITY ROW: This button is physically forced to render! */}
-                <button 
-                  onClick={handleCustomInstallClick}
-                  style={{
-                    backgroundColor: '#1E3A34',
-                    color: '#ffffff',
-                    padding: '8px 16px',
-                    borderRadius: '12px',
-                    fontWeight: 'bold',
-                    border: '1px solid #10b981',
-                    cursor: 'pointer',
-                    fontSize: '10px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.2em',
-                    marginLeft: '8px',
-                    display: 'inline-flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  📥 Install App
-                </button>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </header>
-    </>
-  );
-};
-
-
 
 const BackButton = () => {
   const navigate = useNavigate();
@@ -470,7 +325,7 @@ const BackButton = () => {
       }}
       className="flex items-center gap-2 text-primary hover:text-accent transition-colors mb-6 font-bold text-sm group"
     >
-      <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm border border-border/50 group-hover:border-accent/50 transition-all">
+      <div className="w-10 h-10 bg-slate-900/60 text-slate-100 rounded-full flex items-center justify-center shadow-sm border border-slate-800/80 group-hover:border-accent/50 transition-all">
         <ChevronLeft size={20} />
       </div>
       <span>Back</span>
@@ -479,7 +334,7 @@ const BackButton = () => {
 };
 
 export const PageWrapper: React.FC<{ children: React.ReactNode }> = React.memo(({ children }) => (
-  <div className="relative min-h-screen overflow-hidden bg-muted/50">
+  <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
     {/* Subtle Wellness Background Elements */}
     <div className="absolute top-0 right-0 w-full h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/4" />
     <div className="absolute bottom-0 left-0 w-full h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none translate-y-1/4 -translate-x-1/4" />
@@ -913,8 +768,9 @@ export const KneeSupportGuide = () => {
 
 // --- Pages ---
 
-const AboutPage = () => (
+const AboutPage = ({ setActiveBox }: { setActiveBox: React.Dispatch<React.SetStateAction<string | null>> }) => (
   <PageWrapper>
+    <BackToDashboard setActiveBox={setActiveBox} />
     <header className="mb-24 text-center mt-10">
       <h1 className="text-5xl font-black text-primary mb-6 tracking-tighter">About Knee-Care</h1>
       <p className="text-gray-400 font-medium max-w-xl mx-auto text-xl leading-relaxed">Dedicated to structural joint resilience and natural movement recovery.</p>
@@ -939,8 +795,9 @@ const AboutPage = () => (
   </PageWrapper>
 );
 
-const PrivacyPolicyPage = () => (
+const PrivacyPolicyPage = ({ setActiveBox }: { setActiveBox: React.Dispatch<React.SetStateAction<string | null>> }) => (
   <PageWrapper>
+    <BackToDashboard setActiveBox={setActiveBox} />
     <header className="mb-24 text-center mt-10">
       <h1 className="text-5xl font-black text-primary mb-6 tracking-tighter">Privacy Standards</h1>
       <p className="text-gray-400 font-medium max-w-xl mx-auto text-xl leading-relaxed">Your data integrity is fundamental to our trust.</p>
@@ -976,8 +833,9 @@ const PrivacyPolicyPage = () => (
   </PageWrapper>
 );
 
-const ContactPage = () => (
+const ContactPage = ({ setActiveBox }: { setActiveBox: React.Dispatch<React.SetStateAction<string | null>> }) => (
   <PageWrapper>
+    <BackToDashboard setActiveBox={setActiveBox} />
     <header className="mb-24 text-center mt-10">
       <h1 className="text-5xl font-black text-primary mb-6 tracking-tighter">Connect with Us</h1>
       <p className="text-gray-400 font-medium max-w-xl mx-auto text-xl leading-relaxed">Our support network is here to guide your joint prevention and longevity journey.</p>
@@ -1003,19 +861,19 @@ const ContactPage = () => (
 );
 
 const Footer = () => (
-  <footer className="bg-white border-t border-border/50 py-8 mt-auto">
+  <footer className="bg-slate-950/80 text-slate-100 border-t border-slate-800/80 py-8 mt-auto">
     <div className="max-w-4xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
       <div className="flex items-center gap-2">
         <AppLogo />
-        <span className="font-bold text-primary text-sm">Knee-Care</span>
+        <span className="font-bold text-slate-100 text-sm">Knee-Care</span>
       </div>
-      <div className="flex gap-6 text-xs font-bold uppercase tracking-widest text-gray-400">
-        <Link to="/about" className="hover:text-primary transition-colors">About</Link>
-        <Link to="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
-        <Link to="/contact" className="hover:text-primary transition-colors">Contact</Link>
-        <Link to="/help" className="hover:text-primary transition-colors">Support</Link>
+      <div className="flex gap-6 text-xs font-bold uppercase tracking-widest text-slate-400">
+        <Link to="/about" className="hover:text-slate-100 transition-colors">About</Link>
+        <Link to="/privacy" className="hover:text-slate-100 transition-colors">Privacy</Link>
+        <Link to="/contact" className="hover:text-slate-100 transition-colors">Contact</Link>
+        <Link to="/help" className="hover:text-slate-100 transition-colors">Support</Link>
       </div>
-      <p className="text-[10px] text-gray-400 font-medium">
+      <p className="text-[10px] text-slate-400 font-medium">
         © {new Date().getFullYear()} Knee-Care. All rights reserved.
       </p>
     </div>
@@ -1024,12 +882,18 @@ const Footer = () => (
 
 // --- Main App ---
 
-function AppContent() {
+function AppContent({
+  activeBox,
+  setActiveBox,
+}: {
+  activeBox: string | null;
+  setActiveBox: React.Dispatch<React.SetStateAction<string | null>>;
+}) {
   const { isLoading } = React.useContext(AuthContext);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-muted flex items-center justify-center">
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -1037,8 +901,8 @@ function AppContent() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-muted flex flex-col">
-        <Navbar />
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+        <Header />
         <main className="flex-1">
           <AnimatePresence mode="wait">
             <Routes>
@@ -1047,16 +911,16 @@ function AppContent() {
     <HomeSection setActiveSection={(target) => {
       if (target === 'ex') window.location.href = '/help'; 
       if (target === 'about') window.location.href = '/about'; 
-    }} />
+    }} activeBox={activeBox} setActiveBox={setActiveBox} />
   } />
               <Route path="/exercises" element={<ExerciseSection />} />
               <Route path="/diet" element={<DietSection />} />
-              <Route path="/help" element={<div id="ex">                            <HelpSection /></div>} />
+              <Route path="/help" element={<div id="ex"><HelpSection setActiveBox={setActiveBox} /></div>} />
              
-              <Route path="/checkout" element={<PaymentPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/privacy" element={<PrivacyPolicyPage />} />
-              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/checkout" element={<PaymentPage onBackHome={() => setActiveBox(null)} />} />
+              <Route path="/about" element={<AboutPage setActiveBox={setActiveBox} />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage setActiveBox={setActiveBox} />} />
+              <Route path="/contact" element={<ContactPage setActiveBox={setActiveBox} />} />
             </Routes>
           </AnimatePresence>
         </main>
@@ -1067,13 +931,13 @@ function AppContent() {
 }
 
 export default function App() {
-  
+  const [activeBox, setActiveBox] = React.useState<string | null>(null);
 
   
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <AppContent />
+        <AppContent activeBox={activeBox} setActiveBox={setActiveBox} />
         <Analytics />
       </AuthProvider>
     </ErrorBoundary>

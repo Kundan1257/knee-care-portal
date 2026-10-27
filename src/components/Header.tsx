@@ -90,22 +90,19 @@ export default function Header() {
         </div>
       ) : null}
 
-      {/* 🌐 MAIN HEADER NAVIGATION LAYOUT GRID CONTAINER */}
       <header style={{
-        backgroundColor: '#ffffff',
-        color: '#1E3A34',
+        backgroundColor: '#020617',
+        color: '#f1f5f9',
         padding: '16px',
-        borderBottom: '1px solid #e2e8f0',
+        borderBottom: '1px solid #1e293b',
         position: 'sticky',
         top: 0,
         zIndex: 40
       }}>
-        {/* 🚀 THE FIXED WRAPPING CORE: flexWrap: 'wrap' breaks the horizontal width boundary block cleanly! */}
         <div style={{ 
           maxWidth: '1152px', 
           margin: '0 auto', 
           display: 'flex', 
-          flexWrap: 'wrap', 
           justifyContent: 'space-between', 
           alignItems: 'center',
           gap: '12px' 
@@ -113,42 +110,15 @@ export default function Header() {
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '24px' }}>🦾</span>
-            <span style={{ fontWeight: 'bold', fontSize: '18px', color: '#1E3A34' }}>Knee-Care</span>
+            <span style={{ fontWeight: 'bold', fontSize: '18px', color: '#f1f5f9' }}>Knee-Care</span>
           </div>
           
-          {/* 🚀 FIXED WRAPPING INTERFACE ROW */}
-          <nav style={{ 
-            display: 'flex', 
-            flexWrap: 'wrap', 
-            alignItems: 'center', 
-            gap: '16px',
-            marginLeft: 'auto' 
-          }}>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>HOME</span>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>EX</span>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>DIET</span>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>HELP</span>
-            <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#64748b', cursor: 'pointer' }}>ABOUT</span>
-            
-            <button 
-              onClick={handleCustomInstallClick}
-              style={{
-                backgroundColor: '#059669',
-                color: '#ffffff',
-                padding: '6px 12px',
-                borderRadius: '8px',
-                fontWeight: 'bold',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '12px',
-                boxShadow: '0 4px 6px -1px rgba(5, 150, 105, 0.2)',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              📥 Install App
-            </button>
-          </nav>
-
+          <button
+            onClick={handleCustomInstallClick}
+            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 transform hover:-translate-y-0.5 transition-all duration-200 dynamic-pulse"
+          >
+            INSTALL APP
+          </button>
         </div>
       </header>
     </div>

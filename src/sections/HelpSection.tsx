@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle, Send, Sparkles } from 'lucide-react';
 import { getKneeCareTip } from '../services/geminiService.js';
+import BackToDashboard from '../components/BackToDashboard';
 
 // Dummy layout wrappers to prevent layout crashes
 const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => <div className="min-h-screen bg-gray-50 p-4">{children}</div>;
@@ -19,7 +20,11 @@ const suggestions = [
   "Relaxation routine"
 ];
 
-export const HelpSection: React.FC = () => {
+interface HelpSectionProps {
+  setActiveBox?: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+export const HelpSection: React.FC<HelpSectionProps> = ({ setActiveBox }) => {
   const [messages, setMessages] = useState<{ text: string, isBot: boolean }[]>([
     { text: "Hello! I'm your Knee-Care assistant. How can I help you today?", isBot: true }
   ]);
@@ -66,6 +71,7 @@ export const HelpSection: React.FC = () => {
 
   return (
     <PageWrapper>
+      {setActiveBox && <BackToDashboard setActiveBox={setActiveBox} />}
       <header className="mb-12 text-center">
         <h1 className="text-3xl font-bold text-blue-600 mb-3">AI Support Assistant</h1>
         <p className="text-gray-500 font-medium max-w-lg mx-auto">Get instant guidance on knee care, recovery techniques, and daily habit tips.</p>
@@ -149,4 +155,3 @@ export const HelpSection: React.FC = () => {
 };
 
 export default HelpSection;
-

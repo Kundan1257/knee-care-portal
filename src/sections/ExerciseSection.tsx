@@ -97,7 +97,7 @@ const ExerciseRoutine: React.FC<ExerciseRoutineProps> = ({ title, description, c
         <div className={`md:w-72 flex flex-col items-center justify-center p-10 text-center border-l border-white/50 relative overflow-hidden transition-all duration-700 ${isActive ? 'bg-primary/5' : 'bg-primary/5'}`}>
           {/* Breathing Animation Background */}
           {isActive && (
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ 
                 scale: [0.8, 1.3, 0.8],
@@ -287,15 +287,27 @@ export const ExerciseSection: React.FC = () => {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            {filteredRoutines.map((routine, idx) => (
-              <ExerciseRoutine 
-                key={routine.title}
-                title={routine.title} 
-                description={routine.description}
-                category={routine.category}
-                duration={300}
-              />
-            ))}
+            {filteredRoutines.map((routine) => {
+              const routineIndex = routines.findIndex(({ title }) => title === routine.title);
+              return isPremium || routineIndex === 0 ? (
+                <ExerciseRoutine
+                  key={routine.title}
+                  title={routine.title}
+                  description={routine.description}
+                  category={routine.category}
+                  duration={300}
+                />
+              ) : (
+                <button
+                  key={routine.title}
+                  type="button"
+                  onClick={handleLockedClick}
+                  className="bg-slate-900/80 border border-amber-500/20 backdrop-blur-sm rounded-xl p-6 text-center text-xs text-amber-400 font-bold w-full mb-8"
+                >
+                  🔒 Premium Feature: Unlock Technical Library
+                </button>
+              );
+            })}
             {filteredRoutines.length === 0 && (
               <div className="text-center py-20 text-gray-300 font-medium">
                 No routines found in this category.
@@ -423,17 +435,28 @@ export const ExerciseSection: React.FC = () => {
               >
                 <div className="pt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
                   {RELAXATIONS.map((rel, i) => (
-                    <motion.div 
-                      key={i} 
-                      whileHover={{ scale: 1.02 }}
-                      className="text-center p-8 rounded-[2rem] bg-accent/5 border border-white shadow-sm hover:shadow-md transition-all hover:bg-white"
-                    >
-                      <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm text-accent">
-                        <Activity size={24} />
-                      </div>
-                      <h4 className="font-bold text-primary mb-3 text-lg">{rel.name}</h4>
-                      <p className="text-sm text-gray-500 leading-relaxed font-medium">{rel.description}</p>
-                    </motion.div>
+                    isPremium || i === 0 ? (
+                      <motion.div
+                        key={rel.name}
+                        whileHover={{ scale: 1.02 }}
+                        className="text-center p-8 rounded-[2rem] bg-accent/5 border border-white shadow-sm hover:shadow-md transition-all hover:bg-white"
+                      >
+                        <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm text-accent">
+                          <Activity size={24} />
+                        </div>
+                        <h4 className="font-bold text-primary mb-3 text-lg">{rel.name}</h4>
+                        <p className="text-sm text-gray-500 leading-relaxed font-medium">{rel.description}</p>
+                      </motion.div>
+                    ) : (
+                      <button
+                        key={rel.name}
+                        type="button"
+                        onClick={handleLockedClick}
+                        className="bg-slate-900/80 border border-amber-500/20 backdrop-blur-sm rounded-xl p-6 text-center text-xs text-amber-400 font-bold"
+                      >
+                        🔒 Premium Feature: Unlock Technical Library
+                      </button>
+                    )
                   ))}
                 </div>
               </motion.div>
@@ -482,5 +505,100 @@ export const ExerciseSection: React.FC = () => {
 );
 };
 
-export default ExerciseSection;
+export const ExerciseLifestyleModule: React.FC = () => {
+const isPremium = usePremium();
+const navigate = useNavigate();
+const freeQuadMoves = [
+  { name: "Quad sets", cue: "Gently tighten the front thigh while seated." },
+  { name: "Straight-leg raises", cue: "Lift a straight leg slowly while lying down." },
+  { name: "Supported mini-squats", cue: "Use a stable support and keep the movement comfortable." },
+];
 
+return (
+  <section className="space-y-4" aria-label="Quad stabilization and technical protocols">
+    <div>
+      <h3 className="text-sm font-black uppercase tracking-widest text-indigo-300">Free quad stabilization</h3>
+      <p className="mt-1 text-xs leading-relaxed text-slate-400">Start gently and stop if a movement causes pain.</p>
+    </div>
+    <div className="flex flex-wrap gap-2">
+      {freeQuadMoves.map((move) => (
+        <div key={move.name} className="rounded-xl border border-indigo-400/20 bg-indigo-950/50 px-3 py-2">
+          <p className="text-xs font-bold text-indigo-100">{move.name}</p>
+          <p className="mt-1 max-w-xs text-[11px] leading-relaxed text-slate-400">{move.cue}</p>
+        </div>
+      ))}
+    </div>
+    <div className="rounded-xl border border-slate-700/80 bg-slate-950/60 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h4 className="text-sm font-bold text-slate-100">Technical movement protocols</h4>
+          <p className="mt-1 text-xs text-slate-400">Detailed movement instructions from the Exercise Library.</p>
+        </div>
+        {!isPremium && <Lock size={18} className="shrink-0 text-slate-400" aria-label="Premium locked" />}
+      </div>
+      {isPremium ? (
+        <ul className="mt-3 space-y-2">
+          {EXERCISES.map((exercise) => (
+            <li key={exercise.name} className="rounded-lg border border-slate-800 bg-slate-900/70 p-3">
+              <p className="text-xs font-bold text-slate-100">{exercise.name}</p>
+              <p className="mt-1 text-xs leading-relaxed text-slate-400">{exercise.instruction}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <button
+          type="button"
+          onClick={() => navigate('/checkout')}
+          className="mt-3 rounded-lg border border-indigo-400/30 bg-indigo-400/10 px-4 py-2 text-xs font-black uppercase tracking-wider text-indigo-200 transition-colors hover:bg-indigo-400/20"
+        >
+          Unlock technical protocols
+        </button>
+      )}
+    </div>
+  </section>
+);
+};
+
+export const RelaxationLifestyleModule: React.FC = () => {
+  const isPremium = usePremium();
+  const navigate = useNavigate();
+  const recoveryRoutines = RELAXATIONS.filter((relaxation) =>
+    ['Breathing Relaxation', 'Light Stretching', 'Rest Posture'].includes(relaxation.name)
+  );
+
+  return (
+    <section className="space-y-4" aria-label="Evening recovery and post-exertion insulation">
+      <div>
+        <h3 className="text-sm font-black uppercase tracking-widest text-purple-300">Evening structural recovery</h3>
+        <p className="mt-1 text-xs leading-relaxed text-slate-400">Recovery parameters from the relaxation guide.</p>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {recoveryRoutines.map((relaxation, index) => (
+          isPremium || index === 0 ? (
+            <article key={relaxation.name} className="rounded-xl border border-purple-400/20 bg-purple-950/40 p-3">
+              <h4 className="text-xs font-bold text-purple-100">{relaxation.name}</h4>
+              <p className="mt-1 text-xs leading-relaxed text-slate-300">{relaxation.description}</p>
+            </article>
+          ) : (
+            <button
+              key={relaxation.name}
+              type="button"
+              onClick={() => navigate('/checkout')}
+              className="bg-slate-900/80 border border-amber-500/20 backdrop-blur-sm rounded-xl p-6 text-center text-xs text-amber-400 font-bold"
+            >
+              🔒 Premium Feature: Unlock Technical Library
+            </button>
+          )
+        ))}
+      </div>
+      <div className="rounded-xl border border-slate-700/80 bg-slate-950/60 p-4">
+        <h4 className="text-sm font-bold text-slate-100">Post-exertion insulation tools</h4>
+        <p className="mt-1 text-xs leading-relaxed text-slate-300">
+          A comfortable knee sleeve or light wrap can help retain warmth after activity. Keep it comfortably fitted and follow any clinician guidance.
+        </p>
+      </div>
+    </section>
+  );
+};
+
+export default ExerciseSection;
