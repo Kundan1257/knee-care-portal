@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Droplets, Zap, Leaf, Coffee, Egg, Utensils, ChevronDown, Lock, ArrowRight, Sparkles } from '../App.js';
 import { Card, Section, PageWrapper } from '../App.js';
 import { RECIPES, TEAS, Tea } from '../constants.js';
 import { usePremium } from '../hooks/useAuth.js';
 import { useNavigate } from 'react-router-dom';
+import { analyzeMealImage, MealScanResults } from '../services/geminiService.js';
 
 const TeaItem: React.FC<{ tea: Tea }> = ({ tea }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -94,6 +95,102 @@ const NutritionItem = ({ icon: Icon, title, description }: { icon: any, title: s
 export const DietaryDefenseModule: React.FC = () => {
   const isPremium = usePremium();
   const navigate = useNavigate();
+  const [isScanning, setIsScanning] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [scanResults, setScanResults] = useState<MealScanResults | null>(null);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
+  useEffect(() => {
+    if (!isScanning) return;
+
+    let isActive = true;
+    setCameraError(null);
+
+    const startCamera = async () => {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        setCameraError('Camera access is not available in this browser.');
+        return;
+      }
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' },
+          audio: false,
+        });
+
+        if (!isActive) {
+          stream.getTracks().forEach((track) => track.stop());
+          return;
+        }
+
+        streamRef.current = stream;
+        if (videoRef.current) videoRef.current.srcObject = stream;
+      } catch (error) {
+        if (isActive) {
+          setCameraError(error instanceof Error ? error.message : 'Unable to access the camera.');
+        }
+      }
+    };
+
+    void startCamera();
+
+    return () => {
+      isActive = false;
+      const stream = streamRef.current;
+      streamRef.current = null;
+      if (videoRef.current) videoRef.current.srcObject = null;
+      stream?.getTracks().forEach((track) => track.stop());
+    };
+  }, [isScanning]);
+
+  const analyzeCurrentMeal = async () => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const hasLiveVideoTrack = streamRef.current?.getVideoTracks().some((track) => track.readyState === 'live');
+
+    setAnalysisError(null);
+    setScanResults(null);
+
+    if (!video || !canvas || !hasLiveVideoTrack || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+      setAnalysisError('The camera is not ready yet. Wait for the live preview, then try again.');
+      return;
+    }
+
+    if (!video.videoWidth || !video.videoHeight) {
+      setAnalysisError('The camera frame is unavailable. Please reposition the meal and try again.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const context = canvas.getContext('2d');
+      if (!context) throw new Error('Unable to prepare the camera image. Please try again.');
+
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageBase64 = canvas.toDataURL('image/jpeg', 0.92).split(',')[1];
+      if (!imageBase64) throw new Error('Unable to capture the camera image. Please try again.');
+
+      setScanResults(await analyzeMealImage(imageBase64));
+    } catch (error) {
+      setAnalysisError(error instanceof Error ? error.message : 'Meal analysis failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const stopScanner = () => {
+    const stream = streamRef.current;
+    streamRef.current = null;
+    if (videoRef.current) videoRef.current.srcObject = null;
+    stream?.getTracks().forEach((track) => track.stop());
+    setIsScanning(false);
+  };
 
   return (
     <section className="space-y-4" aria-label="Anti-inflammatory meal combinations">
@@ -101,6 +198,138 @@ export const DietaryDefenseModule: React.FC = () => {
         <h3 className="text-sm font-black uppercase tracking-widest text-emerald-300">Anti-inflammatory meal combinations</h3>
         <p className="mt-1 text-xs leading-relaxed text-slate-400">Whole-food meal ideas from the Dietary Defense library.</p>
       </div>
+      {isScanning ? (
+        <div
+          className="bg-slate-900 border border-emerald-500/30 rounded-xl overflow-hidden relative aspect-video w-full max-w-md mx-auto my-4 flex flex-col items-center justify-center"
+          role="status"
+          aria-label="Camera scanner"
+        >
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            aria-label="Live meal camera preview"
+            className="absolute inset-0 z-0 h-full w-full object-cover"
+          />
+          <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
+          <div className="absolute inset-0 z-[1] bg-slate-950/30" aria-hidden="true" />
+          <div className="absolute inset-5 z-10 rounded-lg border border-emerald-400/40 animate-pulse" aria-hidden="true">
+            <div className="absolute inset-1/3 rounded-full border border-emerald-400/30" />
+            <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-emerald-400/20" />
+            <div className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 bg-emerald-400/20" />
+            <div className="absolute left-1/4 top-0 h-full w-px bg-emerald-400/10" />
+            <div className="absolute left-3/4 top-0 h-full w-px bg-emerald-400/10" />
+            <div className="absolute left-0 top-1/4 h-px w-full bg-emerald-400/10" />
+            <div className="absolute left-0 top-3/4 h-px w-full bg-emerald-400/10" />
+          </div>
+          <p className="relative z-20 max-w-[85%] rounded-lg bg-slate-900/80 px-3 py-2 text-center text-xs font-semibold tracking-wide text-emerald-200">
+            {cameraError ? `📸 ${cameraError}` : '📸 STANDBY: PLACE MEAL IN VIEW...'}
+          </p>
+          <button
+            type="button"
+            onClick={stopScanner}
+            className="absolute bottom-3 z-20 rounded-lg border border-white/10 bg-slate-800 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-slate-700"
+          >
+            ⏹️ Stop Scanner
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setIsScanning(true);
+            setScanResults(null);
+            setAnalysisError(null);
+          }}
+          className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-medium rounded-xl transition duration-200 shadow-md shadow-emerald-900/20 text-center cursor-pointer"
+        >
+          📸 Scan Anti-Inflammatory Meal/Drink with Camera
+        </button>
+      )}
+      {isScanning && (
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={analyzeCurrentMeal}
+            disabled={isLoading}
+            className="w-full max-w-md rounded-xl border border-emerald-500/40 bg-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-md shadow-emerald-900/20 transition-colors duration-200 hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            🔍 Analyze Meal with Gemini AI
+          </button>
+        </div>
+      )}
+      {isLoading && (
+        <div
+          className="w-full max-w-md mx-auto rounded-xl border border-slate-700 bg-slate-900 p-4 animate-pulse"
+          role="status"
+          aria-live="polite"
+        >
+          <p className="text-center text-xs font-bold tracking-wide text-emerald-200">
+            🧬 GEMINI AI INTEL CORE: DEEP SCANNING FOOD ATOMS...
+          </p>
+          <div className="mt-4 space-y-2" aria-hidden="true">
+            <div className="h-3 w-2/3 rounded bg-slate-700" />
+            <div className="h-3 w-full rounded bg-slate-800" />
+            <div className="h-3 w-5/6 rounded bg-slate-800" />
+          </div>
+        </div>
+      )}
+      {analysisError && (
+        <p className="mx-auto w-full max-w-md rounded-xl border border-rose-500/30 bg-rose-950/40 p-3 text-sm text-rose-200" role="alert">
+          {analysisError}
+        </p>
+      )}
+      {scanResults && (
+        <article className="w-full max-w-md mx-auto rounded-2xl border border-emerald-500/30 bg-slate-900 p-5 shadow-lg shadow-emerald-950/20">
+          <h4 className="text-sm font-black uppercase tracking-wider text-emerald-200">Gemini meal scan results</h4>
+          <div className="mt-4">
+            <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400">Detected items</h5>
+            {scanResults.detected_items.length ? (
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {scanResults.detected_items.map((item, index) => (
+                  <li key={`${item}-${index}`} className="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs text-slate-100">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-sm text-slate-300">No identifiable food items were found in this frame.</p>
+            )}
+          </div>
+          <div className="mt-5">
+            <div className="flex items-center justify-between text-xs font-bold">
+              <span className="text-slate-300">Anti-inflammatory index</span>
+              <span className="text-slate-100">{scanResults.score}/100</span>
+            </div>
+            <div
+              className="mt-2 h-3 overflow-hidden rounded-full bg-slate-700"
+              role="meter"
+              aria-label="Anti-inflammatory index"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={scanResults.score}
+            >
+              <div
+                className={`h-full rounded-full transition-[width] duration-700 ${
+                  scanResults.score >= 70 ? 'bg-emerald-400' : scanResults.score >= 40 ? 'bg-amber-400' : 'bg-rose-400'
+                }`}
+                style={{ width: `${scanResults.score}%` }}
+              />
+            </div>
+          </div>
+          <div className="mt-5 grid gap-3 border-t border-slate-700 pt-4 sm:grid-cols-2">
+            <section className="rounded-xl border border-emerald-500/20 bg-slate-800 p-4">
+              <h5 className="text-sm font-bold text-emerald-200">🥗 Quick Anti-Inflammatory Recipe</h5>
+              <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-100">{scanResults.quick_recipe}</p>
+            </section>
+            <section className="rounded-xl border border-sky-500/20 bg-slate-800 p-4">
+              <h5 className="text-sm font-bold text-sky-200">☕ Warming Therapeutic Beverage</h5>
+              <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-100">{scanResults.beverage_pairing}</p>
+            </section>
+          </div>
+        </article>
+      )}
       <div className="grid gap-3 sm:grid-cols-2">
         {RECIPES.map((recipe, index) => (
           isPremium || index === 0 ? (

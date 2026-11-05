@@ -96,6 +96,7 @@ import HelpSection from './sections/HelpSection';
 import PaymentPage from './sections/paymentService';
 import Header from './components/Header';
 import BackToDashboard from './components/BackToDashboard';
+import { supabase } from './lib/supabaseClient';
 
 
 
@@ -334,11 +335,7 @@ const BackButton = () => {
 };
 
 export const PageWrapper: React.FC<{ children: React.ReactNode }> = React.memo(({ children }) => (
-  <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-    {/* Subtle Wellness Background Elements */}
-    <div className="absolute top-0 right-0 w-full h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2 translate-x-1/4" />
-    <div className="absolute bottom-0 left-0 w-full h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none translate-y-1/4 -translate-x-1/4" />
-    
+  <div className="app-canvas relative min-h-screen overflow-hidden text-slate-950">
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
@@ -893,7 +890,7 @@ function AppContent({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">
+      <div className="app-canvas min-h-screen text-slate-950 flex items-center justify-center">
         <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -901,7 +898,7 @@ function AppContent({
 
   return (
     <Router>
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+      <div className="app-canvas min-h-screen text-slate-950 flex flex-col">
         <Header />
         <main className="flex-1">
           <AnimatePresence mode="wait">
@@ -933,7 +930,20 @@ function AppContent({
 export default function App() {
   const [activeBox, setActiveBox] = React.useState<string | null>(null);
 
-  
+  useEffect(() => {
+    if (!new URLSearchParams(window.location.search).has('src')) return;
+
+    const logTraffic = async () => {
+      try {
+        await supabase.from('traffic_sensor_logs').insert([{ clicked_at: new Date() }]);
+      } catch {
+        // Traffic telemetry must not affect page loading.
+      }
+    };
+
+    void logTraffic();
+  }, []);
+
   return (
     <ErrorBoundary>
       <AuthProvider>

@@ -47,6 +47,69 @@ interface HomeSectionProps {
   setActiveBox?: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
+function KineticAlignmentModule() {
+  const [structuralLayer, setStructuralLayer] = React.useState('Patellar Tracking Wrap');
+  const [activityLoad, setActivityLoad] = React.useState(5);
+
+  const checklistItems = [
+    'Base-layer tension verified directly under patella tracking path',
+    'Lateral anchors secured to counter rotational load variance',
+    'Medial stabilization checked before high-flexion sports impact',
+  ];
+
+  return (
+    <div className="space-y-5 text-sm text-slate-100">
+      <div>
+        <label htmlFor="structural-layer" className="mb-2 block font-bold text-white">
+          Select Structural Layer
+        </label>
+        <select
+          id="structural-layer"
+          value={structuralLayer}
+          onChange={(event) => setStructuralLayer(event.target.value)}
+          className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300"
+        >
+          <option>Patellar Tracking Wrap</option>
+          <option>Hinged Unloader Brace</option>
+          <option>Elastic Compression Sleeve</option>
+        </select>
+      </div>
+
+      <fieldset className="space-y-3">
+        <legend className="mb-3 font-bold text-white">Alignment checklist</legend>
+        {checklistItems.map((item) => (
+          <label key={item} className="flex items-start gap-3 text-white">
+            <input
+              type="checkbox"
+              className="mt-1 size-4 shrink-0 accent-cyan-400"
+            />
+            <span>{item}</span>
+          </label>
+        ))}
+      </fieldset>
+
+      <div>
+        <label htmlFor="mechanical-activity-load" className="block font-bold text-white">
+          Mechanical Activity Load Tracking
+        </label>
+        <input
+          id="mechanical-activity-load"
+          type="range"
+          min="0"
+          max="10"
+          value={activityLoad}
+          onChange={(event) => setActivityLoad(Number(event.target.value))}
+          className="mt-3 w-full cursor-pointer accent-cyan-400"
+        />
+        <div className="flex justify-between gap-4 text-xs font-semibold text-slate-200">
+          <span>Low Friction (Walking)</span>
+          <span>High Impact (Sporting)</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, activeBox, setActiveBox }) => {
     const handleNavigation = (target: string) => {
     // 1. Try to find the exact container ID on the page (e.g., id="ex" or id="about")
@@ -91,6 +154,12 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, acti
       title: 'Mobility Loops',
       icon: '🏋️‍♂️',
       style: 'bg-indigo-950/40 border-indigo-500/30 hover:border-indigo-400',
+    },
+    {
+      id: 'kinetic-alignment',
+      title: 'Kinetic Alignment',
+      icon: '🦿',
+      style: 'bg-slate-900/90 border-slate-700/80 hover:border-slate-500',
     },
     {
       id: 'relaxation',
@@ -145,6 +214,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, acti
                     {activeBox === 'diet' && <DietaryDefenseModule />}
                     {activeBox === 'tea' && <ThermalInfusionsModule />}
                     {activeBox === 'exercise' && <ExerciseLifestyleModule />}
+                    {activeBox === 'kinetic-alignment' && <KineticAlignmentModule />}
                     {activeBox === 'relaxation' && <RelaxationLifestyleModule />}
                   </div>
                 </div>
