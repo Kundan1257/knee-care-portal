@@ -90,7 +90,15 @@ Do not wrap the JSON in markdown or code fences. Do not include any other text o
 
   try {
     const result = await Promise.race([request, timeout]);
-    const parsed: unknown = JSON.parse(result.response.text());
+    const text = result.response.text();
+    let cleanedText = text.trim();
+    if (cleanedText.startsWith("```")) {
+      cleanedText = cleanedText
+        .replace(/^```(?:json)?\s*\r?\n?/i, "")
+        .replace(/\r?\n?```$/, "")
+        .trim();
+    }
+    const parsed: unknown = JSON.parse(cleanedText);
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
       throw new Error("Gemini returned an invalid meal analysis. Please try again.");
     }
