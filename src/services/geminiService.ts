@@ -1,5 +1,4 @@
 import { GoogleGenAI } from "@google/genai";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // 💡 SECURE: Read the key safely via Vite's metadata context layer!
 const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
@@ -61,13 +60,11 @@ export const analyzeMealImage = async (imageBase64: string): Promise<MealScanRes
     throw new Error("The camera did not produce an image. Please try again.");
   }
 
-  const model = new GoogleGenerativeAI(apiKey.trim()).getGenerativeModel({
+  const request = ai.models.generateContent({
     model: "gemini-2.5-flash",
-    generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
-  });
-  const request = model.generateContent([
-    {
-      text: `SYSTEM INSTRUCTIONS:
+    contents: [
+      {
+        text: `SYSTEM INSTRUCTIONS:
 Act as a food-image evaluator and practical recipe writer. Identify only foods that are visible; do not infer ingredients that cannot be seen. Provide an anti-inflammatory index from 0 to 100 as a general food-pattern estimate, not a medical assessment. Do not diagnose or promise treatment, prevention, or tissue protection.
 Always generate both recipe fields, even if no food is identifiable. Build the quick meal around the detected ingredients wherever practical, and include only simple, clearly named pantry additions when needed. Make it fast and actionable with numbered, concise preparation steps. Tailor the beverage as a joint-warming, comfort-focused thermal infusion using suitable detected ingredients where practical; include measured ingredients and concise preparation steps. Frame it as hydration that complements balanced eating patterns associated with maintaining normal tissue elasticity, without claiming to protect, repair, or treat joints or tissues.
 Return only one raw, valid JSON object with exactly these four keys:
@@ -75,10 +72,17 @@ Return only one raw, valid JSON object with exactly these four keys:
 - "score": a whole number from 0 to 100 representing the general anti-inflammatory food-pattern rating
 - "quick_recipe": a fast meal recipe using the scanned ingredients, as concise numbered steps
 - "beverage_pairing": a tailored warming thermal infusion recipe with ingredients and concise preparation steps
-Do not wrap the JSON in markdown or code fences. Do not include any other text or keys.`,
+Do not wrap the JSON in markdown or code fences. Do not include any other text or keys.
+CRITICAL CONSTRAINT: You must return your analysis strictly as a single-line, minified, perfectly structured JSON object matching our requested schema. Do not include conversational preambles, extra whitespace, or explanation notes. If no recognizable food, beverage, or ingredient is detected inside the image frame, you must immediately return this exact placeholder object structure: {"detected_items":["Unknown Item"],"score":0,"recipe":"No anti-inflammatory meal components detected. Please scan a clear shot of your food items under good lighting.","beverage":"Ensure your camera is focused directly on your meal."}`,
+      },
+      { inlineData: { mimeType: "image/jpeg", data: imageBase64 } },
+    ],
+    config: {
+      temperature: 0.2,
+      maxOutputTokens: 1024,
+      responseMimeType: "application/json",
     },
-    { inlineData: { mimeType: "image/jpeg", data: imageBase64 } },
-  ]);
+  });
 
   let timeoutId: ReturnType<typeof setTimeout>;
   const timeout = new Promise<never>((_, reject) => {
@@ -90,7 +94,7 @@ Do not wrap the JSON in markdown or code fences. Do not include any other text o
 
   try {
     const result = await Promise.race([request, timeout]);
-    const text = result.response.text();
+    const text = result.text;
     let cleanedText = text.trim();
     if (cleanedText.startsWith("```")) {
       cleanedText = cleanedText
@@ -103,18 +107,33 @@ Do not wrap the JSON in markdown or code fences. Do not include any other text o
       throw new Error("Gemini returned an invalid meal analysis. Please try again.");
     }
 
-    const keys = Object.keys(parsed);
+    const parsedRecord = parsed as Record<string, unknown>;
+    const keys = Object.keys(parsedRecord);
+    const normalized =
+      keys.length === 4 &&
+      keys.includes("detected_items") &&
+      keys.includes("score") &&
+      keys.includes("recipe") &&
+      keys.includes("beverage")
+        ? {
+            detected_items: parsedRecord.detected_items,
+            score: parsedRecord.score,
+            quick_recipe: parsedRecord.recipe,
+            beverage_pairing: parsedRecord.beverage,
+          }
+        : parsed;
+    const normalizedKeys = Object.keys(normalized);
     if (
-      keys.length !== 4 ||
-      !keys.includes("detected_items") ||
-      !keys.includes("score") ||
-      !keys.includes("quick_recipe") ||
-      !keys.includes("beverage_pairing")
+      normalizedKeys.length !== 4 ||
+      !normalizedKeys.includes("detected_items") ||
+      !normalizedKeys.includes("score") ||
+      !normalizedKeys.includes("quick_recipe") ||
+      !normalizedKeys.includes("beverage_pairing")
     ) {
       throw new Error("Gemini returned an unexpected meal analysis format. Please try again.");
     }
 
-    const scanResults = parsed as MealScanResults;
+    const scanResults = normalized as MealScanResults;
     if (
       !Array.isArray(scanResults.detected_items) ||
       !scanResults.detected_items.every((item) => typeof item === "string") ||
