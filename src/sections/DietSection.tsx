@@ -167,13 +167,19 @@ export const DietaryDefenseModule: React.FC = () => {
 
     setIsLoading(true);
     try {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      const maxDimension = 1280;
+      const scale = Math.min(
+        1,
+        maxDimension / Math.max(video.videoWidth, video.videoHeight)
+      );
+
+      canvas.width = Math.round(video.videoWidth * scale);
+      canvas.height = Math.round(video.videoHeight * scale);
       const context = canvas.getContext('2d');
       if (!context) throw new Error('Unable to prepare the camera image. Please try again.');
 
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const imageBase64 = canvas.toDataURL('image/jpeg', 0.92).split(',')[1];
+      const imageBase64 = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
       if (!imageBase64) throw new Error('Unable to capture the camera image. Please try again.');
 
       setScanResults(await analyzeMealImage(imageBase64));
