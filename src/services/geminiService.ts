@@ -62,7 +62,7 @@ export const analyzeMealImage = async (imageBase64: string): Promise<MealScanRes
   }
 
   const model = new GoogleGenerativeAI(apiKey.trim()).getGenerativeModel({
-    model: "gemini-1.5-flash",
+    model: "gemini-2.5-flash",
     generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
   });
   const request = model.generateContent([
