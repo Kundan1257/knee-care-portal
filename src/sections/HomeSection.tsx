@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { DietaryDefenseModule, ThermalInfusionsModule } from './DietSection.js';
 import { ExerciseLifestyleModule, RelaxationLifestyleModule } from './ExerciseSection.js';
 
@@ -111,6 +112,8 @@ function KineticAlignmentModule() {
 }
 
 export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, activeBox, setActiveBox }) => {
+  const [dietScanRequest, setDietScanRequest] = React.useState(0);
+
     const handleNavigation = (target: string) => {
     // 1. Try to find the exact container ID on the page (e.g., id="ex" or id="about")
     let element = document.getElementById(target);
@@ -139,31 +142,31 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, acti
   const lifestyleCards = [
     {
       id: 'diet',
-      title: 'Dietary Defense',
+      title: 'Joint-Friendly Diet Plan',
       icon: '🌿',
       style: 'bg-emerald-950/40 border-emerald-500/30 hover:border-emerald-400',
     },
     {
       id: 'tea',
-      title: 'Thermal Infusions',
+      title: 'Soothing Herbal Teas',
       icon: '☕',
       style: 'bg-amber-950/40 border-amber-500/30 hover:border-amber-400',
     },
     {
       id: 'exercise',
-      title: 'Mobility Loops',
+      title: 'Gentle Knee Exercises',
       icon: '🏋️‍♂️',
       style: 'bg-indigo-950/40 border-indigo-500/30 hover:border-indigo-400',
     },
     {
       id: 'kinetic-alignment',
-      title: 'Kinetic Alignment',
+      title: 'Knee Sleeve & Brace Guide',
       icon: '🦿',
       style: 'bg-slate-900/90 border-slate-700/80 hover:border-slate-500',
     },
     {
       id: 'relaxation',
-      title: 'Recovery Rest',
+      title: 'Joint Relaxation & Recovery',
       icon: '🧘‍♂️',
       style: 'bg-purple-950/40 border-purple-500/30 hover:border-purple-400',
     },
@@ -176,10 +179,33 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, acti
       <div className="w-full rounded-[2rem] border border-slate-800/80 bg-slate-900/60 p-6 shadow-sm flex flex-col gap-4 relative min-h-fit pb-6 overflow-visible">
         <div>
           <h3 className="text-xl font-black text-slate-100 tracking-tight leading-snug">
-            Does Your Knee Feel Unstable During Daily Tasks? 🏡
+            Daily Knee Relief &amp; Joint Protection Made Simple
           </h3>
           <p className="text-sm text-slate-300 font-semibold mt-1">
-            If you experience these common frustrations, you are in the right place:
+            Check if your meals fight joint inflammation, track daily knee comfort, and get guided knee-sleeve routines for sports or daily mobility.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <Link
+            to="/"
+            onClick={(event) => {
+              event.preventDefault();
+              setActiveBox?.('diet');
+              setDietScanRequest((request) => request + 1);
+            }}
+            className="w-full rounded-full bg-emerald-500 px-5 py-4 text-center text-sm font-black text-slate-950 shadow transition hover:bg-emerald-400 active:scale-[0.98]"
+          >
+            Try Free Anti-Inflammatory Diet Scanner
+          </Link>
+          <Link
+            to="/tracker"
+            className="w-full rounded-full border border-emerald-400/60 bg-emerald-950/40 px-5 py-4 text-center text-sm font-bold text-emerald-100 transition hover:bg-emerald-900/60 active:scale-[0.98]"
+          >
+            Open Free Daily Joint Tracker
+          </Link>
+          <p className="text-center text-xs font-medium text-slate-400">
+            100% Free to try • No sign-up required
           </p>
         </div>
 
@@ -211,7 +237,7 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, acti
                     hidden={!isActive}
                     className="mt-4 border-t border-white/10 pt-4"
                   >
-                    {activeBox === 'diet' && <DietaryDefenseModule />}
+                    {activeBox === 'diet' && <DietaryDefenseModule scanRequest={dietScanRequest} />}
                     {activeBox === 'tea' && <ThermalInfusionsModule />}
                     {activeBox === 'exercise' && <ExerciseLifestyleModule />}
                     {activeBox === 'kinetic-alignment' && <KineticAlignmentModule />}
@@ -233,11 +259,11 @@ export const HomeSection: React.FC<HomeSectionProps> = ({ setActiveSection, acti
           Natural Stability <span className="inline-block animate-pulse">🦵</span>
         </h2>
         <p className="mt-5 text-sm md:text-base font-bold text-yellow-400 bg-white/5 border border-yellow-500/30 px-5 py-4 rounded-xl w-full leading-relaxed">
-          💡 PRIVACY TRACKING PROTOCOL: Use this independent checklist interface to log your daily stabilization braces, joint alignment exercises, and recovery parameters with 100% data anonymity.
+          Private &amp; Local Tracking:
 
         </p>
                 <p className="mt-5 text-sm md:text-base leading-relaxed text-slate-200 font-medium">
-          Knee-Care Portal functions as a secure, local-first utility to map structural habit consistency over time without bloated third-party tracking scripts.
+          Your daily knee comfort and brace logs stay safely on your device.
         </p>
 
                    {/* --- COPIED THE OPEN, CLICKABLE BUTTONS ZONE --- */}

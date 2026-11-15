@@ -61,8 +61,8 @@ export const CheckoutSection: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-zinc-950 text-white">
-      <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 p-8 rounded-3xl shadow-xl text-center">
+    <div className="app-canvas min-h-screen flex items-center justify-center px-4 py-12 text-slate-950">
+      <div className="max-w-md w-full bg-slate-900/95 text-white backdrop-blur-md border border-white/10 p-8 rounded-3xl shadow-xl text-center">
         <h2 className="text-2xl font-bold mb-2">Upgrade to Premium</h2>
         <p className="text-zinc-400 mb-6 text-sm">Choose your regional tier configuration below</p>
         

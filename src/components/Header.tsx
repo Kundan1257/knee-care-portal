@@ -115,7 +115,7 @@ export default function Header() {
           
           <button
             onClick={handleCustomInstallClick}
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 px-5 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-wider shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 transform hover:-translate-y-0.5 transition-all duration-200 dynamic-pulse"
+            className="border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-300 px-5 py-2.5 rounded-xl font-semibold text-[10px] uppercase tracking-wider transition-colors duration-200"
           >
             INSTALL APP
           </button>

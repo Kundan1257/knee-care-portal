@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Droplets, Zap, Leaf, Coffee, Egg, Utensils, ChevronDown, Lock, ArrowRight, Sparkles } from '../App.js';
 import { Card, Section, PageWrapper } from '../App.js';
@@ -92,7 +92,13 @@ const NutritionItem = ({ icon: Icon, title, description }: { icon: any, title: s
   </motion.div>
 );
 
-export const DietaryDefenseModule: React.FC = () => {
+const ALL_ACTIVE_STREAMS = new Set<MediaStream>();
+
+interface DietaryDefenseModuleProps {
+  scanRequest?: number;
+}
+
+export const DietaryDefenseModule: React.FC<DietaryDefenseModuleProps> = ({ scanRequest = 0 }) => {
   const isPremium = usePremium();
   const navigate = useNavigate();
   const [isScanning, setIsScanning] = useState(false);
@@ -103,6 +109,39 @@ export const DietaryDefenseModule: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const lastHandledScanRequestRef = useRef<number>(0);
+
+  const stopCamera = useCallback(() => {
+    const video = videoRef.current;
+    const attachedStream = video?.srcObject;
+    const streams = new Set<MediaStream>();
+
+    if (streamRef.current) streams.add(streamRef.current);
+    if (attachedStream instanceof MediaStream) streams.add(attachedStream);
+
+    streams.forEach((stream) => {
+      stream.getTracks().forEach((track) => track.stop());
+    });
+    ALL_ACTIVE_STREAMS.forEach((stream) => {
+      stream.getTracks().forEach((track) => track.stop());
+    });
+    ALL_ACTIVE_STREAMS.clear();
+    streamRef.current = null;
+    if (video) video.srcObject = null;
+  }, []);
+
+  const startScanner = useCallback(() => {
+    setIsScanning(true);
+    setScanResults(null);
+    setAnalysisError(null);
+  }, []);
+
+  useEffect(() => {
+    if (scanRequest > 0 && scanRequest !== lastHandledScanRequestRef.current) {
+      lastHandledScanRequestRef.current = scanRequest;
+      startScanner();
+    }
+  }, [scanRequest, startScanner]);
 
   useEffect(() => {
     if (!isScanning) return;
@@ -121,9 +160,11 @@ export const DietaryDefenseModule: React.FC = () => {
           video: { facingMode: 'environment' },
           audio: false,
         });
+        ALL_ACTIVE_STREAMS.add(stream);
 
         if (!isActive) {
           stream.getTracks().forEach((track) => track.stop());
+          ALL_ACTIVE_STREAMS.delete(stream);
           return;
         }
 
@@ -140,12 +181,15 @@ export const DietaryDefenseModule: React.FC = () => {
 
     return () => {
       isActive = false;
-      const stream = streamRef.current;
-      streamRef.current = null;
-      if (videoRef.current) videoRef.current.srcObject = null;
-      stream?.getTracks().forEach((track) => track.stop());
+      stopCamera();
     };
-  }, [isScanning]);
+  }, [isScanning, stopCamera]);
+
+  useEffect(() => {
+    return () => {
+      stopCamera();
+    };
+  }, [stopCamera]);
 
   const analyzeCurrentMeal = async () => {
     const video = videoRef.current;
@@ -190,11 +234,9 @@ export const DietaryDefenseModule: React.FC = () => {
     }
   };
 
-  const stopScanner = () => {
-    const stream = streamRef.current;
-    streamRef.current = null;
-    if (videoRef.current) videoRef.current.srcObject = null;
-    stream?.getTracks().forEach((track) => track.stop());
+  const stopScanner = (event?: React.MouseEvent<HTMLButtonElement>) => {
+    event?.stopPropagation();
+    stopCamera();
     setIsScanning(false);
   };
 
@@ -243,10 +285,9 @@ export const DietaryDefenseModule: React.FC = () => {
       ) : (
         <button
           type="button"
-          onClick={() => {
-            setIsScanning(true);
-            setScanResults(null);
-            setAnalysisError(null);
+          onClick={(event) => {
+            event.stopPropagation();
+            startScanner();
           }}
           className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-medium rounded-xl transition duration-200 shadow-md shadow-emerald-900/20 text-center cursor-pointer"
         >

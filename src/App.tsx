@@ -912,6 +912,7 @@ function AppContent({
   } />
               <Route path="/exercises" element={<ExerciseSection />} />
               <Route path="/diet" element={<DietSection />} />
+              <Route path="/tracker" element={<TrackerSection />} />
               <Route path="/help" element={<div id="ex"><HelpSection setActiveBox={setActiveBox} /></div>} />
              
               <Route path="/checkout" element={<PaymentPage onBackHome={() => setActiveBox(null)} />} />
